@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  	ANT
+ 
+  	Copyright 2012-2014 IS2T. All rights reserved.
+	Modification and distribution is permitted under certain conditions.
+  	IS2T PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<project name="spCompiler">
+
+	<!-- Scripts used by MicroEJ Launch and MicroEJ Tool -->
+
+	<import file="commonSP.xml" />
+	<import file="microejAntlib.xml" />
+	
+	<!-- Get the current file directory -->
+	<dirname property="spCompiler.launch.dir" file="${ant.file.spCompiler}"/>
+
+	<target name="spCompiler/do" depends="sp/database, spCompiler/loadProperties">
+
+		<!-- sp/database must have set sp.database.xml property -->
+		<fail unless="sp.database.xml"/>
+		
+		<!-- Should have been defined by the caller -->
+		<fail unless="sp.output.dir"/>
+	
+		<!-- 
+			Define the default values for these properties when this script
+			is called from a MicroEJ Launch.
+			When this script is called from the MicroEJ Tool, these properties
+			are already set by the MicroEJ Tool.
+		-->
+		<property name="sp.c.generation" value="false"/>
+		<property name="sp.j.generation" value="false"/>
+		
+		<taskdef name="shieldedplugCompiler" classname="${sp.compiler.classname}" classpath="${platform.dir}/tools/${sp.compiler.jarname}.jar"/>
+		<shieldedplugCompiler 
+			endianness="${arch.endianness}" 
+			outputName="userSP" 
+			toDir="${sp.output.dir}" 
+			waitingTasksLimit="${sp.compiler.waitingTasksLimit}" 
+			rWBlockHeaderSize="${sp.compiler.rWBlockHeaderSize}" 
+			immutable="${sp.compiler.immutable}"
+			genIdsC="${sp.c.generation}"
+			genIdsJava="${sp.j.generation}"
+			cOutputDir="${sp.c.output.dir}"
+			javaOutputDir="${sp.j.output.dir}"
+			cConstantsPrefix="${sp.c.constant.prefix}"
+			javaPackage="${sp.j.package}"
+		>
+			<fileset file="${sp.database.xml}"/>
+		</shieldedplugCompiler>
+	</target>
+
+	<target name="spCompiler/loadProperties">
+		<loadproperties srcFile="${spCompiler.launch.dir}/spCompiler.properties"/>
+		<loadproperties srcFile="${spCompiler.launch.dir}/core.properties"/>
+
+		<!-- Checks if the needed properties are defined -->
+		<fail unless="arch.endianness" message="Platform endianness is unknown. Please set the property 'arch.endianness'."/>
+		<fail unless="arch.link.target" message="Platform compiler architecture is unknown. Please set the property 'arch.link.target'."/>
+		<fail unless="sp.compiler.waitingTasksLimit"/>		
+		<fail unless="sp.compiler.rWBlockHeaderSize"/>		
+		<fail unless="sp.compiler.immutable"/>		
+	</target>
+	
+
+</project>

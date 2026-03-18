@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  	ANT
+ 
+  	Copyright 2012-2022 IS2T. All rights reserved.
+	Modification and distribution is permitted under certain conditions.
+  	IS2T PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<project name="spServerInit">
+
+	<import file="${ant.file.spServerInit}/../../extension-init.xml" />
+	<import file="${ant.file.spServerInit}/../../commonSP.xml" />	
+
+	<target name="init/spServer" extensionOf="init/execution" depends="sp/database" if="onS3">
+		<available classpathref="init.application.classpath" classname="ej.sp.ShieldedPlug" property="usesShieldedPlugServer" ignoresystemclasses="true"/>
+		
+		<!-- Add ECOM and SNI in the classpath -->			
+		<augment id="init.application.classpath">
+			<fileset dir="${vm.dir}/javaLibs" includes="ecom-*.jar" />
+			<fileset dir="${platform.dir}/javaLibs/" includes="sni*.jar" />
+		</augment>
+			
+		<!-- Add the needed connection as required -->
+		<!-- Configuration -->
+		<condition property="shieldedplug.connector" value="comm" else="socket">
+			<istrue value="${sp.remote.server}" />
+		</condition>
+		
+		<!-- REQUIRES -->
+		<condition property="shieldedplug.require" value="ej.ecom.connection.${shieldedplug.connector}.ConnectionFactory" else="">
+			<istrue value="${usesShieldedPlugServer}"/>
+		</condition>
+		
+		<augment id="init.requires">
+			<string value="${shieldedplug.require}"/>
+		</augment>
+
+		<!-- PROPERTIES -->
+		<condition property="shieldedplug.connection.comm" value="comm:com1;baudrate=115200;bitsperchar=8;stopbits=1;parity=none" else="">
+			<istrue value="${usesShieldedPlugServer}"/>
+		</condition>
+		
+		<!-- Set default shieldedplug server port value-->
+		<property name="sp.server.port" value="10082"/>
+			
+		<condition property="shieldedplug.connection.socket" value="socket://127.0.0.1:${sp.server.port}" else="">
+			<istrue value="${usesShieldedPlugServer}"/>
+		</condition>
+		
+		<condition property="sp.connection.url" value="${shieldedplug.connection.comm}" else="${shieldedplug.connection.socket}">
+			<istrue value="${sp.remote.server}"/>
+		</condition>
+		<augment id="init.properties">
+			<propertyref name="sp.connection.url"/>
+		</augment>
+		
+		<!-- SPServer must be launched in parallel with the S3 (the tasks reference is defined by the S3 scripts) -->
+		<augment id="s3.exec.parallel.tasks">
+			<ant antfile="${scripts.dir}/SPServer.xml" target="mock/spServer"/>
+		</augment>
+
+	</target>
+
+
+	<target name="init/spServer/mock" extensionOf="init/execution" if="onS3">
+		<!-- Add the shieldedplug client in mock classpath -->		
+		<augment id="hil.main.classpath">
+			<fileset dir="${platform.dir}/tools" includes="shieldedplugClient.jar"/>
+		</augment>
+		
+		<!-- Define the shieldedplug connector property -->
+		<property name="com.is2t.sp.connector" value="com.is2t.sp.remote.RemoteShieldedPlugConnectorDesktop"/>
+		<augment id="hil.main.properties">
+			<propertyref name="com.is2t.sp.connector"/>
+		</augment>
+	</target>
+
+</project>

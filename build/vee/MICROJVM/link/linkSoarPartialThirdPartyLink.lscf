@@ -1,0 +1,23 @@
+<!--
+	LSC
+ 
+  	Copyright 2010-2022 IS2T. All rights reserved.
+	Modification and distribution is permitted under certain conditions.
+  	IS2T PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<lscFragment>
+
+	<!-- 
+		C linkers (e.g. ARMCC) problem workaround : 
+		A native touches the _java_Ljava_util_Hashtable symbol only if the class Hashtable is embedded. 
+		The problem is that some c linkers try to resolve the symbol even if the native is not embedded.
+		The solution is to define this symbol but set it as weak symbol in order to use the right one
+		when the class Hashtable is really embedded.
+	-->
+	<defSymbol name="_java_Ljava_util_Hashtable" value="0" weak="true" rootSymbol="true"/>
+	<defSymbol name="_java_Ljava_io_EOFException" value="0" weak="true" rootSymbol="true"/>
+	<defSymbol name="_java_sni_native_resource_owner" value="0" weak="true" rootSymbol="true"/>
+	<defSymbol name="_java_stackgroup_table" value="0" weak="true"/>
+	<defSymbol name="_java_stackgroup_table_length" value="0" weak="true"/>
+	
+</lscFragment>

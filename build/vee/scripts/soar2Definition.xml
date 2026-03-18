@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  	ANT
+ 
+  	Copyright 2019-2023 IS2T. All rights reserved.
+  	IS2T PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<project name="soar2.definition">
+
+	<dirname file="${ant.file.soar2.definition}" property="ant.dir.soar2.definition"/>
+	<loadproperties srcfile="${ant.dir.soar2.definition}/soar2.properties" prefix="soar2"/>
+	
+	<import file="soar2PathDefinition.xml"/>
+	<!-- Silently skip if soar is unavailable (e.g virtual device strip - execSOAR will be set to false later) -->
+	<taskdef name="soar2CSTask" classname="${soar2.cs.classname}" classpathref="soar2-r.classpath.path" onerror="ignore"/>
+	<taskdef name="soar2OTask" classname="${soar2.o.classname}" classpathref="soar2-o.classpath.path" onerror="ignore"/>
+		
+	<condition property="soar.sanity.check" value="true" else="false">
+		<isset property="execution.verbose"/>
+	</condition>
+
+	<presetdef name="soar2-r">
+		<soar2CSTask
+			sanityCheck="${soar.sanity.check}"
+			verboseLevel="${soar2.verbose.level}"
+			outputDir="${soar.output.dir}"
+			outputName="${soar.root.name}"
+			externalResourcesDir="${externalResources.output.dir}"
+			
+			mainclass="${application.main.class}"
+			rootTypes="${overall.requires}"
+			rootImmutables="${overall.immutables}"
+			rootResources="${overall.resources}"
+	
+			niFiles="${overall.soar.ni.files}"
+			endianness="${arch.endianness}"
+			symbolPrefix="${arch.symbol.prefix}"
+			floatingRepresentation="${decimal.impl}"
+			
+			disableStringCompaction="${soar.disableStringCompaction}"
+			
+			is13Compliance="${cldc.13.compliance}"
+			executeAssertions="${core.assertions.emb.enabled}"
+			generateAllClassnames="${soar.generate.classnames}"
+			expectedErrorsFilename="${com.microej.soar-r.errordescription.file}"
+		>
+			<classpath>				
+				<pathelement path="${overall.soar.bootclasspath}"/>
+				<pathelement path="${overall.classpath}"/>
+			</classpath>
+			<propertyset refid="emb.java.propertyset"/>
+		</soar2CSTask>
+	</presetdef>
+	
+	
+	<presetdef name="soar2-o">
+		<soar2OTask
+			sanityCheck="true"
+			verboseLevel="${soar2.verbose.level}"
+			outputDir="${soar.output.dir}"
+			outputName="${soar.root.name}"
+			endianness="${arch.endianness}"
+			sharedObjectFilename="${soar.output.dir}/${soar.root.name}.so"
+			symbolPrefix="${arch.symbol.prefix}"
+			asmVerifyFilename="${com.microej.soar.asmverify.file}"
+			generateDebugInfos="${com.microej.soar.debuginfos.enabled}"
+			expectedErrorsFilename="${com.microej.soar-o.errordescription.file}"
+			featurePortabilityControlMetadataPath="${soar.featureportabilitycontrol.metadata.path}"
+			groupMethods="${com.microej.soar.groupMethods.enabled}"
+		>
+			<buildpropertyset refid="build.propertyset"/>
+		</soar2OTask>
+	</presetdef>
+
+</project>
+	
+	

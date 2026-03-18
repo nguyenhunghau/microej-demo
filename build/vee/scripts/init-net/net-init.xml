@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ANT Buildfile
+
+  Copyright 2014-2021 IS2T. All rights reserved.
+  IS2T PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+<project name="net-embedded-init">
+
+	<import file="${scripts.dir}/extension-init.xml" />
+
+	<target name="context/net-embedded" extensionOf="init/context">
+		<!-- check if application targets Net Embedded -->
+		<available classpath="${application.classpath}" classname="com.is2t.support.net.NetworkAddress" property="usesNETEMBEDDED"/>
+	</target>
+	
+	<target name="init/net-embedded" extensionOf="init/execution" if="usesNETEMBEDDED">
+		<!-- CLASSPATH -->
+		<augment id="init.application.classpath">
+			<fileset dir="${jpf.dir}/javaLibs" includes="sni-*.jar"/>
+		</augment>
+		
+		<!-- REQUIRES -->
+		<augment id="init.requires">
+			<string value="com.is2t.support.net.Channel"/>
+
+			<!-- types loaded through DependencyInjectionHelper (couple: getName/forName)-->
+			<string value="com.is2t.support.net.security.INetSecurityManager"/>
+			<string value="com.is2t.support.net.security.NetSecurityManagerStub"/>
+			
+			<string value="com.is2t.support.net.security.INetSecurityManagerFactory"/>
+			<string value="com.is2t.support.net.security.NetSecurityManagerFactory"/>
+			
+			<string value="com.is2t.support.net.security.IURLSecurityManager"/>
+			<string value="com.is2t.support.net.security.URLSecurityManagerStub"/>
+			
+			<string value="com.is2t.support.net.INetworkAddress"/>
+			<string value="com.is2t.support.net.NetworkAddress"/>
+			
+			<string value="com.is2t.support.net.IDatagramSocketChannelFactory"/>
+			<string value="com.is2t.support.net.DatagramSocketChannelFactory"/>
+			
+			<string value="com.is2t.support.net.IDNS"/>
+			<string value="com.is2t.support.net.NetworkAddress"/>
+
+			<string value="com.is2t.support.net.INetworkInterface"/>
+			<string value="com.is2t.support.net.NetworkInterface"/>
+			
+			<string value="com.is2t.support.net.IStreamSocketChannelFactory"/>
+			<string value="com.is2t.support.net.StreamSocketChannelFactory"/>
+			
+			<string value="com.is2t.support.net.ISocketChannel"/>
+			<string value="com.is2t.support.net.SocketChannel"/>
+			
+			<string value="java.net.DefaultDatagramSocketImplFactory"/>
+			<string value="com.is2t.support.net.IDatagramSocketImplFactory"/>
+		</augment>
+
+	</target>
+	
+	
+	<target name="finalization/net-embedded" extensionOf="init/finalization" if="execSOAR">
+		<!-- check that required clinit desc file is used -->
+		<fail message="[ERROR] Net Embedded clinit description file could not be embedded (${soar.clinit.mode} clinit mode).">
+			<condition>
+				<and>
+					<isset property="soar.clinit.mode"/>
+					<equals arg1="${soar.clinit.mode}" arg2="default"/>
+				</and>
+			</condition>
+		</fail>
+	</target>
+	
+</project>

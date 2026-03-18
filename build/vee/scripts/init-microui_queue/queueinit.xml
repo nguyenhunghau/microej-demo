@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	ANT
+	
+	Copyright 2012-2023 MicroEJ Corp. All rights reserved.
+	This library is provided in source code for use, modification and test, subject to license terms.
+	Any modification of the source code will break MicroEJ Corp. warranties on the whole library.
+-->
+<project name="queue"> 
+
+	<import file="${ant.file.queueInit}/../../extension-init.xml" />
+	<import file="${ant.file.queueInit}/../../init-microui/microuiinit.xml" />
+	<import file="${ant.file.queueInit}/../../microejAntlib.xml" />
+	
+	<property name="ej.microui.memory.queue.size.min" value="50" description="same value than wbe"/>
+	<property name="ej.microui.memory.queue.size.default" value="100" description="same value than wbe"/>
+
+	<target name="init/queue/context" extensionOf="init/context" depends="init/microui/check" if="usesMICROUI">
+		
+		<!-- set a default size if not already set -->
+		<property name="ej.microui.memory.queue.size" value="${ej.microui.memory.queue.size.default}"/>
+		
+		<!-- check user's queue size-->
+		<script language="javascript"><![CDATA[
+		    var size = parseInt(project.getProperty('ej.microui.memory.queue.size'));
+		    var min = parseInt(project.getProperty('ej.microui.memory.queue.size.min'));
+		    project.setProperty('ej.microui.memory.queue.size.too.small', size < min);
+		  ]]></script>
+		
+		<!-- set platform's queue size according user's queue size-->
+		<condition property="ej.microui.memory.queue.size.platform" value="${ej.microui.memory.queue.size.min}" else="${ej.microui.memory.queue.size}">
+			<istrue value="${ej.microui.memory.queue.size.too.small}"/>
+		</condition>
+		
+	</target>
+				
+	<target name="init/queue/context/stub" extensionOf="init/context" depends="init/microui/check" unless="usesMICROUI">
+		<property name="ej.microui.memory.queue.size.platform" value="0" description="empty queue because useless"/>
+	</target>
+	
+	<target name="init/queue" extensionOf="init/execution" if="onBoard">
+		<!-- create tmp dir -->
+		<local name="link.files.dir"/>
+		<microejtempfile deleteonexit="true" prefix="linkQueue" property="link.files.dir"/>
+		<mkdir dir="${link.files.dir}"/>
+			
+		<!-- get tmp link file name -->
+		<local name="link.sizes"/>
+		<property name="link.sizes" value="${link.files.dir}/sizes.lscf" />
+		
+		<!-- create the size file -->
+		<echoxml file="${link.sizes}" append="false">
+			<lscFragment>
+				<defSymbol name="${arch.symbol.prefix}QUEUE_BUFFER_SIZE" value="${ej.microui.memory.queue.size.platform}"/>
+			</lscFragment>
+		</echoxml>
+		
+		<!-- add link file in linker's link files path -->
+		<augment id="partialLink.lscf.path">
+			<path location="${link.files.dir}"/>
+			<path location="${jpf.dir}/link"/>
+		</augment>
+		
+	</target>
+</project>

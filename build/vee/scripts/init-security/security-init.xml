@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright 2020 MicroEJ Corp. All rights reserved.
+	MicroEJ Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<project name="security">
+
+	<import file="${scripts.dir}/extension-init.xml" />
+	
+	<target name="context/security" extensionOf="init/context">
+		<condition property="usesSecurity">
+			<or>
+				<available classname="com.is2t.support.security.DefaultKeyStore" classpath="${application.classpath}" ignoresystemclasses="true"/>
+				<available classname="com.is2t.support.net.ssl.AbstractSSLContext" classpath="${application.classpath}" ignoresystemclasses="true"/>
+			</or>
+		</condition>
+	</target>
+		
+	<target name="init/security" extensionOf="init/execution" if="usesSecurity">
+		<!-- CLASSPATH -->
+		<augment id="init.application.classpath">
+			<fileset dir="${jpf.dir}/javaLibs" includes="security-*.jar"/>
+		</augment>
+				
+		<augment id="init.requires">
+			<!-- CertificateFactory implementations -->
+			<string value="com.is2t.support.security.x509.X509Factory"/>
+			
+			<!-- KeyStore implementations -->
+			<string value="com.is2t.support.security.DefaultKeyStore"/>
+		</augment>		
+	</target>
+	
+</project>

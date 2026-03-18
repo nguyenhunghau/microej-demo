@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ANT Buildfile
+
+  Copyright 2019 MicroEJ Corp. All rights reserved.
+  MicroEJ Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+<project name="trace-init">
+
+	<import file="${scripts.dir}/extension-init.xml" />
+
+	<!-- Default values for properties set by the MicroEJ launcher -->
+	<property name="core.trace.enabled" value="false"/>
+	<property name="core.trace.autostart" value="false"/>
+		
+	<target name="trace-init:constant" extensionOf="init/execution">
+		<augment id="init.constants">
+			<propertyref name="core.trace.enabled"/>
+			<propertyref name="core.trace.autostart"/>
+		</augment>
+	</target>
+
+</project>

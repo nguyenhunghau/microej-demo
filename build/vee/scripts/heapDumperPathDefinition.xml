@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  	ANT
+ 
+  	Copyright 2018 IS2T. All rights reserved.
+	Modification and distribution is permitted under certain conditions.
+  	IS2T PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<project name="heapDumper.path.definition">
+
+	<property name="heapDumper.soarModelReader" location="${tools.dir}/soarModelReader.jar"/>
+	<property name="heapDumper.vmModelReader" location="${tools.dir}/vmModelReader.jar"/>
+	<path id="heapDumper.classpath.path">
+		<pathelement location="${tools.dir}/heapDumper.jar"/>		
+		<pathelement location="${heapDumper.soarModelReader}"/>		
+		<pathelement location="${heapDumper.vmModelReader}"/>		
+	</path>
+
+</project>
+	
+	

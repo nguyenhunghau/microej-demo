@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ANT Buildfile
+
+  Copyright 2014-2018 IS2T. All rights reserved.
+  IS2T PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+<project name="net-embedded-networksettings-init">
+
+	<import file="${scripts.dir}/extension-init.xml" />
+
+	<path id="netembedded.networksettings.anttools.path">
+		<fileset dir="${anttoolsDefinitions.basedir}/../tools" includes="netembeddedNetworkSettingsTools*.jar"/>
+	</path>
+	<taskdef resource="com/is2t/libraries/netembedded/tools/antlib.xml" classpathref="netembedded.networksettings.anttools.path" />
+		
+	<target name="createLinkFileNetEmbeddedNetworkSettings" extensionOf="init/execution" if="onBoard"><!--  -->
+		<fail unless="arch.endianness" message="Platform endianness not set."/>
+		<fail unless="arch.symbol.prefix" message="Please define the 'arch.symbol.prefix' property"/>
+		
+		<!-- temporary link files -->
+		<local name="link.files.dir"/>
+		<microejtempfile deleteonexit="true" prefix="linkNetEmbeddedNetworkSettings" property="link.files.dir"/>
+		<mkdir dir="${link.files.dir}"/>
+		
+		<local name="link.sizes"/>
+		<property name="link.sizes" value="${link.files.dir}/sizes.lscf" />
+		
+		<condition property="com.is2t.libraries.netembedded.networksettings.isbigendian" value="false" else="true">
+			<equals arg1="${arch.endianness}" arg2="little"/>
+		</condition>
+		
+		<netembeddedNetworkSettingsGenerator
+			symbolPrefix="${arch.symbol.prefix}"
+			linkfilePath="${link.sizes}"
+			deviceIPAddress="${com.is2t.libraries.netembedded.networksettings.device.ip.address.str}"
+			netmask="${com.is2t.libraries.netembedded.networksettings.netmask.str}"
+			gatewayIPAddress="${com.is2t.libraries.netembedded.networksettings.gateway.ip.address.str}"
+			dnsIPAddress="${com.is2t.libraries.netembedded.networksettings.dns.ip.address.str}"
+			dhcpConf="${com.is2t.libraries.netembedded.networksettings.dhcp.ip.conf}"
+			dhcpDNSConf="${com.is2t.libraries.netembedded.networksettings.dhcp.dns.ip.conf}"
+			macAddress="${com.is2t.libraries.netembedded.networksettings.mac.address.str}"
+			macConf="${com.is2t.libraries.netembedded.networksettings.mac.address.conf}"
+			bigEndianness="${com.is2t.libraries.netembedded.networksettings.isbigendian}"
+		/>
+		
+		<augment id="partialLink.lscf.path">
+			<path location="${link.files.dir}"/>
+		</augment>
+	</target>
+</project>

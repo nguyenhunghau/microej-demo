@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  	ANT
+ 
+  	Copyright 2017-2022 IS2T. All rights reserved.
+	Modification and distribution is permitted under certain conditions.  	
+  	IS2T PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<project name="partialLinkTraceInit">
+
+	<!-- 
+		Generate link file for VM with Trace
+	-->
+
+	<dirname file="${ant.file.partialLinkTraceInit}" property="ant.dir.partialLinkTraceInit"/>
+	
+	<import file="${ant.dir.partialLinkTraceInit}/../extension-init.xml" />
+	<import file="${ant.dir.partialLinkTraceInit}/../microejAntlib.xml" />
+		
+	<property name="core.trace.enabled" value="false"/>
+	<property name="core.trace.autostart" value="false"/>
+	
+	<target name="createLinkFileTrace" extensionOf="init/execution" if="onBoard">
+		<!-- temporary link files -->
+		<local name="link.files.dir"/>
+		<microejtempfile deleteonexit="true" prefix="linkTrace" property="link.files.dir"/>
+		<mkdir dir="${link.files.dir}"/>
+		
+		<local name="link.file"/>
+		<property name="link.file" value="${link.files.dir}/trace.lscf" />
+
+		<!-- 
+			Symbol==2 means traces are auto-started , Symbol!=2 means traces are not auto-started.
+			See TraceUtil class.
+		 -->
+		<condition property="core.trace.autostart.symbol.value" value="2" else="1">
+			<istrue value="${core.trace.autostart}"/>
+		</condition>
+		
+		<!-- 
+			Symbol==2 means traces are enabled , Symbol!=2 means traces are not enabled.
+			See TraceUtil class.
+		 -->
+		<condition property="core.trace.enabled.symbol.value" value="2" else="1">
+			<istrue value="${core.trace.enabled}"/>
+		</condition>
+		
+		<fail unless="arch.symbol.prefix" message="Please define the 'arch.symbol.prefix' property "/>
+		
+		<!-- create the size file -->
+		<echoxml file="${link.file}" append="false">
+			<lscFragment>
+				<defSymbol name="${arch.symbol.prefix}_java_vmtrace_autoStart" value="${core.trace.autostart.symbol.value}"/>
+				<defSymbol name="${arch.symbol.prefix}_java_vmtrace_enabled" value="${core.trace.enabled.symbol.value}" rootSymbol="true"/>
+			</lscFragment>
+		</echoxml>
+		
+		<augment id="partialLink.lscf.path">
+			<path location="${link.files.dir}"/>
+		</augment>
+		
+	</target>
+		
+	<target name="selectLinkFilePath" extensionOf="init/execution" if="onBoard">
+		<!-- 
+			Select the link file directory to use:
+			- if trace as enabled, use a directory that contains lscf that link to the LL
+			- if trace as disabled, use a directory that contains lscf that link to empty methods
+		 -->
+		<condition property="traces.link.dirname" value="trace" else="notrace">
+			<istrue value="${core.trace.enabled}"/>
+		</condition>
+		
+		<augment id="partialLink.lscf.path">
+			<path location="${ant.dir.partialLinkTraceInit}/link/${traces.link.dirname}"/>
+		</augment>
+	</target>
+		
+</project>

@@ -1,0 +1,47 @@
+<!--
+	LSC
+	
+	Copyright 2017-2023 IS2T. All rights reserved.
+	Modification and distribution is permitted under certain conditions.
+	IS2T PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<lscFragment>
+
+	<defSection name=".rodata.microej.runtime.LLTRACE_start_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_start"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_stop_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_stop"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_is_started_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_is_started"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_declare_event_group_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_declare_event_group"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_record_event_void_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_record_event_void"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_record_event_u32_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_record_event_u32"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_record_event_u32x2_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_record_event_u32x2"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_record_event_u32x3_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_record_event_u32x3"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_record_event_u32x4_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_record_event_u32x4"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_record_event_u32x5_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_record_event_u32x5"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_record_event_u32x6_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_record_event_u32x6"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_record_event_u32x7_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_record_event_u32x7"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_record_event_u32x8_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_record_event_u32x8"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_record_event_u32x9_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_record_event_u32x9"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_record_event_u32x10_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_record_event_u32x10"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_record_event_end_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_record_event_end"/> </defSection>
+	<defSection name=".rodata.microej.runtime.LLTRACE_record_event_end_u32_ptr" align="4" rootSection="true"> <u4 value="LLTRACE_IMPL_record_event_end_u32"/> </defSection>
+
+
+	<defSymbol name="LLTRACE_start_ptr" value="START(.rodata.microej.runtime.LLTRACE_start_ptr)"/>
+	<defSymbol name="LLTRACE_stop_ptr" value="START(.rodata.microej.runtime.LLTRACE_stop_ptr)"/>
+	<defSymbol name="LLTRACE_is_started_ptr" value="START(.rodata.microej.runtime.LLTRACE_is_started_ptr)"/>
+	<defSymbol name="LLTRACE_declare_event_group_ptr" value="START(.rodata.microej.runtime.LLTRACE_declare_event_group_ptr)"/>
+	<defSymbol name="LLTRACE_record_event_void_ptr" value="START(.rodata.microej.runtime.LLTRACE_record_event_void_ptr)"/>
+	<defSymbol name="LLTRACE_record_event_u32_ptr" value="START(.rodata.microej.runtime.LLTRACE_record_event_u32_ptr)"/>
+	<defSymbol name="LLTRACE_record_event_u32x2_ptr" value="START(.rodata.microej.runtime.LLTRACE_record_event_u32x2_ptr)"/>
+	<defSymbol name="LLTRACE_record_event_u32x3_ptr" value="START(.rodata.microej.runtime.LLTRACE_record_event_u32x3_ptr)"/>
+	<defSymbol name="LLTRACE_record_event_u32x4_ptr" value="START(.rodata.microej.runtime.LLTRACE_record_event_u32x4_ptr)"/>
+	<defSymbol name="LLTRACE_record_event_u32x5_ptr" value="START(.rodata.microej.runtime.LLTRACE_record_event_u32x5_ptr)"/>
+	<defSymbol name="LLTRACE_record_event_u32x6_ptr" value="START(.rodata.microej.runtime.LLTRACE_record_event_u32x6_ptr)"/>
+	<defSymbol name="LLTRACE_record_event_u32x7_ptr" value="START(.rodata.microej.runtime.LLTRACE_record_event_u32x7_ptr)"/>
+	<defSymbol name="LLTRACE_record_event_u32x8_ptr" value="START(.rodata.microej.runtime.LLTRACE_record_event_u32x8_ptr)"/>
+	<defSymbol name="LLTRACE_record_event_u32x9_ptr" value="START(.rodata.microej.runtime.LLTRACE_record_event_u32x9_ptr)"/>
+	<defSymbol name="LLTRACE_record_event_u32x10_ptr" value="START(.rodata.microej.runtime.LLTRACE_record_event_u32x10_ptr)"/>
+	<defSymbol name="LLTRACE_record_event_end_ptr" value="START(.rodata.microej.runtime.LLTRACE_record_event_end_ptr)"/>
+	<defSymbol name="LLTRACE_record_event_end_u32_ptr" value="START(.rodata.microej.runtime.LLTRACE_record_event_end_u32_ptr)"/>
+
+</lscFragment>

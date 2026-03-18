@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	ANT
+ 
+	Copyright 2011-2022 IS2T. All rights reserved.
+	Modification and distribution is permitted under certain conditions.
+  	IS2T PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<project name="bonInit">
+
+	<dirname property="ant.dir.bonInit" file="${ant.file.bonInit}"/>
+	<import file="${ant.dir.bonInit}/../extension-init.xml" />
+	<import file="${ant.dir.bonInit}/../microejAntlib.xml" />
+
+	<target name="init/bon" extensionOf="init/execution" depends="init/bon/s3">
+		<echo message="B-ON init" level="verbose"/>
+		<!-- CLASSPATH -->
+		<augment id="init.application.classpath">
+			<fileset dir="${platform.dir}/javaLibs" includes="bon-*.jar" />
+		</augment>		
+	</target>
+	
+	<target name="init/bon/s3" if="onS3">
+		<!-- Add the BON in the S3 bootclasspath -->
+		<augment id="s3.bootclasspath.path">
+			<fileset dir="${platform.dir}/javaLibs" includes="bon-*.jar"/>
+		</augment>
+	</target>
+	
+	<target name="init/bon/soar" extensionOf="init/execution" if="execSOAR">
+		<!-- Add the BON in the SOAR bootclasspath -->
+		<augment id="init.soar.bootclasspath">
+			<fileset dir="${platform.dir}/javaLibs" includes="bon-*.jar"/>
+		</augment>
+	</target>
+	
+	<target name="mkdirs/bon" extensionOf="launch/mkdirs" depends="mkdirs/s3/bon"/>
+	
+	<target name="mkdirs/s3/bon" if="onS3">
+		<property name="s3.bon.outputDir" value="${application.output.dir}/bon"/>
+		<mkdir dir="${s3.bon.outputDir}"/>
+	</target>
+	
+</project>

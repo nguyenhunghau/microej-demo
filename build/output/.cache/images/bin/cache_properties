@@ -1,0 +1,7 @@
+bpp:16
+lcdFormat:4
+byteXY:true
+isBigEndian:false
+memXY:true
+arch:8
+alignment:4

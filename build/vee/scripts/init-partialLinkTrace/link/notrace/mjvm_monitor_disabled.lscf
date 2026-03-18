@@ -1,0 +1,36 @@
+<!--
+	LSC
+	
+	Copyright 2017-2022 IS2T. All rights reserved.
+	Modification and distribution is permitted under certain conditions.
+	IS2T PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<lscFragment>
+
+	<defSection name=".rodata.microej.runtime.MJVM_MONITOR_initialize_ptr" align="4" rootSection="true"> <u4 value="MJVM_MONITOR_default_stub"/> </defSection>
+	<defSection name=".rodata.microej.runtime.MJVM_MONITOR_on_shutdown_ptr" align="4" rootSection="true"> <u4 value="MJVM_MONITOR_default_stub"/> </defSection>
+	<defSection name=".rodata.microej.runtime.MJVM_MONITOR_on_thread_create_ptr" align="4" rootSection="true"> <u4 value="MJVM_MONITOR_default_stub"/> </defSection>
+	<defSection name=".rodata.microej.runtime.MJVM_MONITOR_on_thread_modified_ptr" align="4" rootSection="true"> <u4 value="MJVM_MONITOR_default_stub"/> </defSection>
+	<defSection name=".rodata.microej.runtime.MJVM_MONITOR_on_thread_state_changed_ptr" align="4" rootSection="true"> <u4 value="MJVM_MONITOR_default_stub"/> </defSection>
+	<defSection name=".rodata.microej.runtime.MJVM_MONITOR_on_idle_ptr" align="4" rootSection="true"> <u4 value="MJVM_MONITOR_default_stub"/> </defSection>
+	<defSection name=".rodata.microej.runtime.MJVM_MONITOR_on_gc_start_ptr" align="4" rootSection="true"> <u4 value="MJVM_MONITOR_default_stub"/> </defSection>
+	<defSection name=".rodata.microej.runtime.MJVM_MONITOR_on_gc_stop_ptr" align="4" rootSection="true"> <u4 value="MJVM_MONITOR_default_stub"/> </defSection>
+	<defSection name=".rodata.microej.runtime.MJVM_MONITOR_on_invoke_method_ptr" align="4" rootSection="true"> <u4 value="MJVM_MONITOR_default_stub"/> </defSection>
+	<defSection name=".rodata.microej.runtime.MJVM_MONITOR_on_return_method_ptr" align="4" rootSection="true"> <u4 value="MJVM_MONITOR_default_stub"/> </defSection>
+	<defSection name=".rodata.microej.runtime.MJVM_MONITOR_on_allocate_ptr" align="4" rootSection="true"> <u4 value="MJVM_MONITOR_default_stub"/> </defSection>
+	<defSection name=".rodata.microej.runtime.MJVM_MONITOR_on_exception_ptr" align="4" rootSection="true"> <u4 value="MJVM_MONITOR_default_stub"/> </defSection>
+	
+	<defSymbol name="MJVM_MONITOR_initialize_ptr" value="START(.rodata.microej.runtime.MJVM_MONITOR_initialize_ptr)"/>
+	<defSymbol name="MJVM_MONITOR_on_shutdown_ptr" value="START(.rodata.microej.runtime.MJVM_MONITOR_on_shutdown_ptr)"/>
+	<defSymbol name="MJVM_MONITOR_on_thread_create_ptr" value="START(.rodata.microej.runtime.MJVM_MONITOR_on_thread_create_ptr)"/>
+	<defSymbol name="MJVM_MONITOR_on_thread_modified_ptr" value="START(.rodata.microej.runtime.MJVM_MONITOR_on_thread_modified_ptr)"/>
+	<defSymbol name="MJVM_MONITOR_on_thread_state_changed_ptr" value="START(.rodata.microej.runtime.MJVM_MONITOR_on_thread_state_changed_ptr)"/>
+	<defSymbol name="MJVM_MONITOR_on_idle_ptr" value="START(.rodata.microej.runtime.MJVM_MONITOR_on_idle_ptr)"/>
+	<defSymbol name="MJVM_MONITOR_on_gc_start_ptr" value="START(.rodata.microej.runtime.MJVM_MONITOR_on_gc_start_ptr)"/>
+	<defSymbol name="MJVM_MONITOR_on_gc_stop_ptr" value="START(.rodata.microej.runtime.MJVM_MONITOR_on_gc_stop_ptr)"/>
+	<defSymbol name="MJVM_MONITOR_on_invoke_method_ptr" value="START(.rodata.microej.runtime.MJVM_MONITOR_on_invoke_method_ptr)"/>
+	<defSymbol name="MJVM_MONITOR_on_return_method_ptr" value="START(.rodata.microej.runtime.MJVM_MONITOR_on_return_method_ptr)"/>
+	<defSymbol name="MJVM_MONITOR_on_allocate_ptr" value="START(.rodata.microej.runtime.MJVM_MONITOR_on_allocate_ptr)"/>
+	<defSymbol name="MJVM_MONITOR_on_exception_ptr" value="START(.rodata.microej.runtime.MJVM_MONITOR_on_exception_ptr)"/>
+	
+</lscFragment>

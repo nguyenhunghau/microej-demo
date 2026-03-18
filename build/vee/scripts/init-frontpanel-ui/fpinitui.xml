@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	ANT
+	
+ 	Copyright 2011-2022 MicroEJ Corp. All rights reserved.
+ 	This library is provided in source code for use, modification and test, subject to license terms.
+ 	Any modification of the source code will break MicroEJ Corp. warranties on the whole library.
+-->
+<project name="frontPanelUIInit">
+
+	<dirname file="${ant.file.frontPanelUIInit}" property="frontPanelUIInit.dir"/>
+	
+	<import file="${frontPanelUIInit.dir}/../extension-init.xml" />
+	<import file="${frontPanelUIInit.dir}/../init-microui/microuiinit.xml" />
+	<import file="${frontPanelUIInit.dir}/../init-frontpanel/fpinit.xml" />
+	
+	<target name="init/frontpanelui/check" extensionOf="init/context" depends="init/microui/check" if="onS3">
+		<condition property="initFrontPanel" value="true">
+			<istrue value="${usesMICROUI}"/>
+		</condition>
+	</target>
+		
+	<target name="init/frontpanelui/classpath" extensionOf="init/context" depends="init/frontpanelui/check, init/frontpanel/classpath, init/frontpanelui/classpath/widget-microui" if="initFrontPanel">
+		
+		<!--
+			Checks 3 properties actually: ${ej.fp.hil} AND ${initFrontPanel} AND ${onS3}. 
+			Force to run front panel with S3 only if ${ej.fp.hil} is not set to 'true' in the launcher. 
+			
+			| Platform | Application | Launcher | Engine |
+			|- - - - - |- - - - - - -|- - - - - |- - - - |
+			|   !UI    |     n/a     |   n/a    |  HIL   |
+			|    UI    |     !UI     |   n/a    |  HIL   |
+			|    UI    |     UI      |    -     |   S3   | (default case)
+			|    UI    |     UI      |   HIL    |  HIL   |
+					
+		-->
+		<condition property="frontpanel.runWithS3" value="true">
+			<not><istrue value="${ej.fp.hil}"/></not>
+		</condition>
+		
+		<!--
+			UI pack 13.2.0 can be installed on MicroEJ Architecture 7.13.0 or higher but the option ${ej.fp.hil}
+			requires a fix available in MicroEJ Architecture 7.17.0.
+			
+			Allows to run the UI pack 13.2.0 on older MicroEJ Architecture when the option ${ej.fp.hil} is not used.
+		-->
+		<fail message="The MicroEJ Architecture 7.17.0 or higher is required to run the Front Panel in the same classpath than the HIL Engine.">
+			<condition>
+				<and>
+					<not><istrue value="${frontpanel.runWithS3}"/></not>
+					<or>
+						<contains string="${com.microej.architecture.version}" substring="7.13"/>
+						<contains string="${com.microej.architecture.version}" substring="7.14"/>
+						<contains string="${com.microej.architecture.version}" substring="7.15"/>
+						<contains string="${com.microej.architecture.version}" substring="7.16"/>
+					</or>
+				</and>
+			</condition>
+		</fail>
+		
+	</target>
+	
+	<target name="init/frontpanelui/classpath/widget-microui/check" if="initFrontPanel">
+		<property name="widget-microui.name" value="frontpanel"/>
+
+		<pathconvert property="frontpanel.widget-microui.available">
+			<first>
+				<fileset dir="${fronpanel.mock.dir}" includes="${widget-microui.name}*.jar"/>
+			</first>
+		</pathconvert>
+		<condition property="frontpanel.widget-microui.exclude">
+			<not><equals arg1="${frontpanel.widget-microui.available}" arg2=""/></not> 
+		</condition>
+	</target>
+	
+	<target name="init/frontpanelui/classpath/widget-microui" depends="init/frontpanelui/classpath/widget-microui/check" if="frontpanel.widget-microui.exclude">
+		
+		<!-- exclude user ivy dependency "${widget-microui.name}.jar" (already included in microui.jar) -->
+		<excludeJar name="${widget-microui.name}"/>
+		
+		<!-- retrieve internal and user widget version to compare them at runtime -->
+		<extractVersion name="widget-microui" prefix="user" jar="frontpanel"/>
+		<extractVersion name="widget-microui" prefix="intern" jar="microui"/>
+		
+	</target>
+	
+	<!--
+		These front panel properties must be set even if MicroUI is not in the classpath: the platform
+		contains MicroUI but the application not. So the front panel will run on HIL to show the spash screen.
+		On front panel startup, the widget Display requires some properties to initialize itself, even if
+		it is not used by the application (widget Display can only be used by MicroUI)
+	-->
+	<target name="init/frontpanelui" extensionOf="init/execution" depends="init/microui/options" if="onS3">
+		
+		<!-- load graphical engine (display stack) definitions, file is not available when there is no display (so properties are useless) -->
+		<property file="${jpf.dir}/scripts/init-display/display.properties" prefix="frontpanel.display."/>
+		
+		<!--
+			_______________________________________________________
+			|      Graphics Engine     | Image Encoding (any bpp) |
+			|__________________________|__________________________|
+			|   bpp    | memory layout |     sim    |     emb     |
+			|__________|_______________|____________|_____________|
+			| < 8 (Cx) | line          | line       | line        |
+			| < 8 (Cx) | column (1)    | column (1) | column (1)  |
+			| >= 8     | line          | line       | line        |
+			| >= 8     | column (2)    | line       | column (2)  |
+			|__________|_______________|____________|_____________|
+			
+			- column (1): 
+				- follow the Cx specification: xx, xy, yx, yy
+				- first encoded pixel: (0,0) == top-left
+				- second encoded pixel: (1,0) or (0,1) 
+				- RGB images (bpp >= 8) follows the memory layout "column"
+			- column (2):
+				- means "rotation" 90° anticlockwise
+				- advanced option (not documented, not officially supported)
+				- only useful on emb; on sim, keeps "line" encoding 
+				- first encoded pixel: (0,h-1) == bottom-left
+				- second encoded pixel: (0,h-2)
+				- FIXME Cx (bpp < 8) encoding
+		-->
+		<condition property="frontpanel.display.memoryLayout.xy" value="false" else="true">
+			<and>
+				<equals trim="true" arg1="${frontpanel.display.memoryLayout}" arg2="column"/>
+				<or>
+					<equals arg1="${frontpanel.display.bpp}" arg2="1"/>
+					<equals arg1="${frontpanel.display.bpp}" arg2="2"/>
+					<equals arg1="${frontpanel.display.bpp}" arg2="4"/>
+				</or>
+			</and>
+		</condition>
+		<condition property="frontpanel.display.byteLayout.xy" value="true" else="false">
+			<equals trim="true" arg1="${frontpanel.display.byteLayout}" arg2="line"/>
+		</condition>
+		
+		<!-- optional options (may be already set in frontpanel.file) -->
+		<property name="frontpanel.display.decoder.png.enabled" value="false" description="'true' to enabled the internal PNG decoders (simple and interlaced)"/>
+		<property name="frontpanel.display.decoder.bmpm.enabled" value="false" description="'true' to enabled the internal BMP monochrom decoder"/>
+		
+		<!-- PROPERTIES -->
+		<property name="s3.hil.local.noAutomaticCopy" value="set"/>
+		<property name="com.is2t.microbsp.microui.image.decoder.png" value="${frontpanel.display.decoder.png.enabled}"/>
+		<property name="com.is2t.microbsp.microui.image.decoder.bmpm" value="${frontpanel.display.decoder.bmpm.enabled}"/>
+
+		<property name="com.is2t.microbsp.microui.io.workingBuffer" value="${ej.microui.memory.imagesheap.size}" />
+		<property name="com.is2t.microbsp.microui.io.queue.size" value="${ej.microui.memory.queue.size.platform}"/>
+		<property name="com.is2t.microbsp.microui.io.display.alpha" value="${frontpanel.display.alpha}" />
+		<property name="com.is2t.microbsp.microui.io.display.bpp" value="${frontpanel.display.bpp}" />
+		<property name="com.is2t.microbsp.microui.io.display.pixel" value="${frontpanel.display.pixel}" />
+		<property name="com.is2t.microbsp.microui.io.display.memoryLayout" value="${frontpanel.display.memoryLayout.xy}" />
+		<property name="com.is2t.microbsp.microui.io.display.byteLayout" value="${frontpanel.display.byteLayout.xy}" />
+		<property name="com.is2t.microbsp.microui.image.alignment" value="${display.imageBuffer.memoryAlignment}" />
+			
+		<!-- load event generator properties file made by system microui generator -->
+		<property file="${fronpanel.mock.dir}/microui.properties" prefix="com.is2t.microbsp.microui.io.eventgenerator"/>
+		
+	</target>
+	
+	<!--
+		Update HIL properties when front panel UI is running on HIL.
+		
+		note: see target "init/frontpanelui" comment: platform with UI but application without UI. The front panel
+		properties must be available in HIL context.
+	-->
+	<target name="init/frontpanelui/hil" extensionOf="init/execution" depends="init/frontpanelui" unless="frontpanel.runWithS3" if="onS3">
+		
+		<augment id="hil.main.properties">
+			<propertyref prefix="com.is2t.microbsp.microui."/>
+			<propertyref prefix="arch.endianness"/>
+		</augment>
+		
+		<!-- includes AWT ImageIO optional services -->
+		<augment id="hil.main.classpath">
+			 <fileset dir="${platform.dir}/tools" includes="imageio-*.jar"/>
+		</augment>
+		
+	</target>
+		
+	<target name="init/frontpanelui/s3" extensionOf="init/execution" depends="init/frontpanel/exec" if="frontpanel.runWithS3">
+		<!-- includes AWT ImageIO optional services -->
+		<augment id="s3.mock.includes">
+			 <fileset dir="${platform.dir}/tools" includes="imageio-*.jar"/>
+		</augment>
+	</target>
+	
+</project>

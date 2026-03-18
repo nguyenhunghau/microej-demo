@@ -1,0 +1,174 @@
+
+<!--
+	LSC
+	
+	Copyright 2016-2023 MicroEJ Corp. All rights reserved.
+	This library is provided in source code for use, modification and test, subject to license terms.
+	Any modification of the source code will break MicroEJ Corp. warranties on the whole library.
+-->
+		
+<lscFragment>
+		
+	<defSymbol name="IMAGE_UTILS_TABLE_COPY" value="START(.rodata.IMAGE_UTILS_TABLE_COPY)"/>
+	<defSymbol name="IMAGE_UTILS_TABLE_COPY_WITH_ALPHA" value="START(.rodata.IMAGE_UTILS_TABLE_COPY_WITH_ALPHA)"/>
+	<defSymbol name="IMAGE_UTILS_TABLE_DRAW" value="START(.rodata.IMAGE_UTILS_TABLE_DRAW)"/>
+	<defSymbol name="IMAGE_UTILS_TABLE_SET" value="START(.rodata.IMAGE_UTILS_TABLE_SET)"/>
+	<defSymbol name="IMAGE_UTILS_TABLE_READ" value="START(.rodata.IMAGE_UTILS_TABLE_READ)"/>
+		
+	<!--
+		Functions to perform a copy from source to destination without checking a global alpha
+		(no need to perform a blending when the source pixel is fully opaque). 
+		
+		Each function can be replaced by a generic one (smaller footprint but slower):
+		"com_is2t_drivers_addr_image_drawer_Stub___genericCopy"
+		
+		Each function can be replaced by an empty function which disables the copy (smaller footprint):
+		"com_is2t_drivers_addr_image_drawer_Stub___copyDisabled"
+	-->
+	<defSection name=".rodata.IMAGE_UTILS_TABLE_COPY" align="8" rootSection="true">
+		<u4 value="0"/>	<!-- never used -->
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromARGB1565RLE"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromARGB8888"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromRGB888"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromRGB565"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromARGB1555"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromARGB4444"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromA4"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromA8"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromLRGB888"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromLARGB8888"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromA2"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromA1"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromC4"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromC2"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromC1"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromAC44"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromAC22"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromAC11"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromF8"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromF4"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromF2"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromF1"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromA8RLE"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromARGB8888PRE"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromARGB1555PRE"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromARGB4444PRE"/>
+	</defSection>
+	
+	<!--
+		Functions to perform a copy from source to destination, checking a global alpha
+		(have always to perform a blending between source pixel, destination pixel and
+		global alpha). 
+		
+		Each function can be replaced by a generic one (smaller footprint but slower):
+		"com_is2t_drivers_addr_image_drawer_Stub___genericCopy"
+		
+		Each function can be replaced by an empty function which disables the copy (smaller footprint):
+		"com_is2t_drivers_addr_image_drawer_Stub___copyDisabled"
+	-->
+	<defSection name=".rodata.IMAGE_UTILS_TABLE_COPY_WITH_ALPHA" align="8" rootSection="true">
+		<u4 value="0"/>	<!-- never used -->
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromARGB1565RLEAndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromARGB8888AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromRGB888AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromRGB565AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromARGB1555AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromARGB4444AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromA4AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromA8AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromLRGB888AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromLARGB8888AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromA2AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromA1AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromC4AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromC2AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromC1AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromAC44AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromAC22AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromAC11AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromF8AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromF4AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromF2AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromF1AndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromA8RLEAndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromARGB8888PREAndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromARGB1555PREAndAlpha"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromARGB4444PREAndAlpha"/>
+	</defSection>
+	
+	<!--
+		Functions to draw an ARGB8888 color in destination, checking or not a global alpha.
+		
+		Each function can be replaced by an empty function which disables the drawing (smaller footprint):
+		"com_is2t_drivers_addr_image_drawer_Stub___drawDisabled"
+	-->
+	<defSection name=".rodata.IMAGE_UTILS_TABLE_DRAW" align="8" rootSection="true">
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromDrawing"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___fromDrawingAndAlpha"/>
+	</defSection>
+	
+	<!--
+		Functions to set an ARGB8888 color in destination (no blending: the color replace the destination
+		pixel)
+		
+		Each function can be replaced by an empty function which disables the setting (smaller footprint):
+		"com_is2t_drivers_addr_image_drawer_Stub___setDisabled"
+	-->
+	<defSection name=".rodata.IMAGE_UTILS_TABLE_SET" align="8" rootSection="true">
+		<u4 value="0"/>	<!-- never used -->
+		<u4 value="0"/>	<!-- never used -->
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToARGB8888___set"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB888___set"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___set"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToARGB1555___set"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToARGB4444___set"/>
+		<u4 value="0"/>	<!-- never used -->
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToA8___set"/>
+	</defSection>
+	
+	<!--
+		Functions to read an ARGB8888 color from source.
+		
+		Each function can be replaced by an empty function which disables the reading (smaller footprint):
+		"com_is2t_drivers_addr_image_drawer_Stub___readDisabled"
+	-->
+	<defSection name=".rodata.IMAGE_UTILS_TABLE_READ" align="8" rootSection="true">
+		<u4 value="0"/>	<!-- never used -->
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcARGB1565RLE"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcARGB8888"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcRGB888"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcRGB565"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcARGB1555"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcARGB4444"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcA4"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcA8"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcLRGB888"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcLARGB8888"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcA2"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcA1"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcC4"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcC2"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcC1"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcAC44"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcAC22"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcAC11"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcF8"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcF4"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcF2"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcF1"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcA8RLE"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcARGB8888PRE"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcARGB1555PRE"/>
+		<u4 value="com_is2t_drivers_addr_image_drawer_ImageReader___readFromSrcARGB4444PRE"/>
+	</defSection>
+		
+	<!--
+		Functions to draw an image according its format and the output format
+	-->	
+	<defSymbol name="IMAGE_DRAWERS_TABLE" value="START(.rodata.IMAGE_UTILS_TABLE_IMAGE)"/>
+	<defSection name=".rodata.IMAGE_UTILS_TABLE_IMAGE" align="8" rootSection="true">
+		<u4 value="com_is2t_drivers_addr_image_drawer_ToRGB565___drawA8RLE"/>
+	</defSection>		
+	
+</lscFragment>
+		

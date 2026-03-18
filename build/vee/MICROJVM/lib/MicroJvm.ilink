@@ -1,0 +1,144 @@
+<!--This file is auto-generated - DO NOT EDIT IT-->
+<ilink>
+	<typeDeclaration name="com.is2t.microjvm.mowana.VMTask" singleton="true">
+		<method name="newMowanaVM"/>
+		<method name="schedule"/>
+		<method name="clearCurrentJavaThreadPendingResumeFlag"/>
+		<method name="isResumePending__I"/>
+		<method name="resumeJavaThread__ILiceTea_lang_Ram_2"/>
+		<method name="getCallbackArgs__LiceTea_lang_Ram_2LiceTea_lang_Ram_2"/>
+		<method name="javaThreadYield__LiceTea_lang_Method_2LiceTea_lang_Ram_2"/>
+		<method name="suspendCurrentJavaThread__JLiceTea_lang_Method_2LiceTea_lang_Ram_2Z"/>
+		<method name="getCurrentJavaThreadID"/>
+		<method name="getJavaResource__LiceTea_lang_Ram_2ILiceTea_lang_Ram_2"/>
+		<method name="getScopedResource__LiceTea_lang_Ram_2LiceTea_lang_Ram_2LiceTea_lang_Ram_2"/>
+		<method name="unregisterScopedResource"/>
+		<method name="registerScopedResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2LiceTea_lang_Method_2"/>
+		<method name="unregisterResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2"/>
+		<method name="registerResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2LiceTea_lang_Method_2"/>
+		<method name="clearPendingException"/>
+		<method name="isExceptionPending"/>
+		<method name="throwNativeException__ILiceTea_lang_Ram_2Z"/>
+		<method name="isImmortalArray__LiceTea_lang_Ram_2"/>
+		<method name="checkIntegrity"/>
+		<method name="dump"/>
+		<method name="getExitCode"/>
+		<method name="start__ILiceTea_lang_Ram_2"/>
+		<method name="initialize"/>
+	</typeDeclaration>
+	<typeDeclaration name="com.is2t.microjvm.IGreenThreadMicroJvm" singleton="true">
+		<method name="clearCurrentJavaThreadPendingResumeFlag"/>
+		<method name="isResumePending__I"/>
+		<method name="resumeJavaThread__ILiceTea_lang_Ram_2"/>
+		<method name="getCallbackArgs__LiceTea_lang_Ram_2LiceTea_lang_Ram_2"/>
+		<method name="javaThreadYield__LiceTea_lang_Method_2LiceTea_lang_Ram_2"/>
+		<method name="suspendCurrentJavaThread__JLiceTea_lang_Method_2LiceTea_lang_Ram_2Z"/>
+		<method name="getCurrentJavaThreadID"/>
+		<method name="getJavaResource__LiceTea_lang_Ram_2ILiceTea_lang_Ram_2"/>
+		<method name="getScopedResource__LiceTea_lang_Ram_2LiceTea_lang_Ram_2LiceTea_lang_Ram_2"/>
+		<method name="unregisterScopedResource"/>
+		<method name="registerScopedResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2LiceTea_lang_Method_2"/>
+		<method name="unregisterResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2"/>
+		<method name="registerResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2LiceTea_lang_Method_2"/>
+		<method name="clearPendingException"/>
+		<method name="isExceptionPending"/>
+		<method name="throwNativeException__ILiceTea_lang_Ram_2Z"/>
+		<method name="isImmortalArray__LiceTea_lang_Ram_2"/>
+		<method name="checkIntegrity"/>
+		<method name="dump"/>
+		<method name="getExitCode"/>
+		<method name="start__ILiceTea_lang_Ram_2"/>
+		<method name="initialize"/>
+	</typeDeclaration>
+	<typeDeclaration name="com.is2t.microjvm.IMicroJvm" singleton="true">
+		<method name="getJavaResource__LiceTea_lang_Ram_2ILiceTea_lang_Ram_2"/>
+		<method name="getScopedResource__LiceTea_lang_Ram_2LiceTea_lang_Ram_2LiceTea_lang_Ram_2"/>
+		<method name="unregisterScopedResource"/>
+		<method name="registerScopedResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2LiceTea_lang_Method_2"/>
+		<method name="unregisterResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2"/>
+		<method name="registerResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2LiceTea_lang_Method_2"/>
+		<method name="clearPendingException"/>
+		<method name="isExceptionPending"/>
+		<method name="throwNativeException__ILiceTea_lang_Ram_2Z"/>
+		<method name="isImmortalArray__LiceTea_lang_Ram_2"/>
+		<method name="checkIntegrity"/>
+		<method name="dump"/>
+		<method name="getExitCode"/>
+		<method name="start__ILiceTea_lang_Ram_2"/>
+		<method name="initialize"/>
+	</typeDeclaration>
+	<typeDeclaration name="com.is2t.microjvm.IMicroJvmExitCodes" singleton="true"/>
+	<class name="com.is2t.microjvm.mowana.VMTask" singleton="true">
+		<type name="com.is2t.microjvm.IMicroJvmExitCodes"/>
+		<type name="com.is2t.microjvm.IMicroJvm">
+			<method name="getJavaResource__LiceTea_lang_Ram_2ILiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___getJavaResource"/>
+			<method name="getScopedResource__LiceTea_lang_Ram_2LiceTea_lang_Ram_2LiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___getScopedResource"/>
+			<method name="unregisterScopedResource" symbol="com_is2t_microjvm_mowana_VMTask___unregisterScopedResource"/>
+			<method name="registerScopedResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2LiceTea_lang_Method_2" symbol="com_is2t_microjvm_mowana_VMTask___registerScopedResource"/>
+			<method name="unregisterResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2" symbol="com_is2t_microjvm_mowana_VMTask___unregisterResource"/>
+			<method name="registerResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2LiceTea_lang_Method_2" symbol="com_is2t_microjvm_mowana_VMTask___registerResource"/>
+			<method name="clearPendingException" symbol="com_is2t_microjvm_mowana_VMTask___clearPendingException"/>
+			<method name="isExceptionPending" symbol="com_is2t_microjvm_mowana_VMTask___isExceptionPending"/>
+			<method name="throwNativeException__ILiceTea_lang_Ram_2Z" symbol="com_is2t_microjvm_mowana_VMTask___throwNativeException"/>
+			<method name="isImmortalArray__LiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___isImmortalArray"/>
+			<method name="checkIntegrity" symbol="com_is2t_microjvm_mowana_VMTask___checkIntegrity"/>
+			<method name="dump" symbol="com_is2t_microjvm_mowana_VMTask___dump"/>
+			<method name="getExitCode" symbol="com_is2t_microjvm_mowana_VMTask___getExitCode"/>
+			<method name="start__ILiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___start"/>
+			<method name="initialize" symbol="com_is2t_microjvm_mowana_VMTask___initialize"/>
+		</type>
+		<type name="com.is2t.microjvm.IGreenThreadMicroJvm">
+			<method name="clearCurrentJavaThreadPendingResumeFlag" symbol="com_is2t_microjvm_mowana_VMTask___clearCurrentJavaThreadPendingResumeFlag"/>
+			<method name="isResumePending__I" symbol="com_is2t_microjvm_mowana_VMTask___isResumePending"/>
+			<method name="resumeJavaThread__ILiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___resumeJavaThread"/>
+			<method name="getCallbackArgs__LiceTea_lang_Ram_2LiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___getCallbackArgs"/>
+			<method name="javaThreadYield__LiceTea_lang_Method_2LiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___javaThreadYield"/>
+			<method name="suspendCurrentJavaThread__JLiceTea_lang_Method_2LiceTea_lang_Ram_2Z" symbol="com_is2t_microjvm_mowana_VMTask___suspendCurrentJavaThread"/>
+			<method name="getCurrentJavaThreadID" symbol="com_is2t_microjvm_mowana_VMTask___getCurrentJavaThreadID"/>
+			<method name="getJavaResource__LiceTea_lang_Ram_2ILiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___getJavaResource"/>
+			<method name="getScopedResource__LiceTea_lang_Ram_2LiceTea_lang_Ram_2LiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___getScopedResource"/>
+			<method name="unregisterScopedResource" symbol="com_is2t_microjvm_mowana_VMTask___unregisterScopedResource"/>
+			<method name="registerScopedResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2LiceTea_lang_Method_2" symbol="com_is2t_microjvm_mowana_VMTask___registerScopedResource"/>
+			<method name="unregisterResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2" symbol="com_is2t_microjvm_mowana_VMTask___unregisterResource"/>
+			<method name="registerResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2LiceTea_lang_Method_2" symbol="com_is2t_microjvm_mowana_VMTask___registerResource"/>
+			<method name="clearPendingException" symbol="com_is2t_microjvm_mowana_VMTask___clearPendingException"/>
+			<method name="isExceptionPending" symbol="com_is2t_microjvm_mowana_VMTask___isExceptionPending"/>
+			<method name="throwNativeException__ILiceTea_lang_Ram_2Z" symbol="com_is2t_microjvm_mowana_VMTask___throwNativeException"/>
+			<method name="isImmortalArray__LiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___isImmortalArray"/>
+			<method name="checkIntegrity" symbol="com_is2t_microjvm_mowana_VMTask___checkIntegrity"/>
+			<method name="dump" symbol="com_is2t_microjvm_mowana_VMTask___dump"/>
+			<method name="getExitCode" symbol="com_is2t_microjvm_mowana_VMTask___getExitCode"/>
+			<method name="start__ILiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___start"/>
+			<method name="initialize" symbol="com_is2t_microjvm_mowana_VMTask___initialize"/>
+		</type>
+		<type name="com.is2t.microjvm.bsp.IGreenThreadMicroJvmScheduler">
+			<method name="schedule" symbol="com_is2t_microjvm_mowana_VMTask___schedule"/>
+		</type>
+		<type name="com.is2t.microjvm.mowana.VMTask">
+			<method name="newMowanaVM" symbol="com_is2t_microjvm_mowana_VMTask___newMowanaVM"/>
+			<method name="schedule" symbol="com_is2t_microjvm_mowana_VMTask___schedule"/>
+			<method name="clearCurrentJavaThreadPendingResumeFlag" symbol="com_is2t_microjvm_mowana_VMTask___clearCurrentJavaThreadPendingResumeFlag"/>
+			<method name="isResumePending__I" symbol="com_is2t_microjvm_mowana_VMTask___isResumePending"/>
+			<method name="resumeJavaThread__ILiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___resumeJavaThread"/>
+			<method name="getCallbackArgs__LiceTea_lang_Ram_2LiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___getCallbackArgs"/>
+			<method name="javaThreadYield__LiceTea_lang_Method_2LiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___javaThreadYield"/>
+			<method name="suspendCurrentJavaThread__JLiceTea_lang_Method_2LiceTea_lang_Ram_2Z" symbol="com_is2t_microjvm_mowana_VMTask___suspendCurrentJavaThread"/>
+			<method name="getCurrentJavaThreadID" symbol="com_is2t_microjvm_mowana_VMTask___getCurrentJavaThreadID"/>
+			<method name="getJavaResource__LiceTea_lang_Ram_2ILiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___getJavaResource"/>
+			<method name="getScopedResource__LiceTea_lang_Ram_2LiceTea_lang_Ram_2LiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___getScopedResource"/>
+			<method name="unregisterScopedResource" symbol="com_is2t_microjvm_mowana_VMTask___unregisterScopedResource"/>
+			<method name="registerScopedResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2LiceTea_lang_Method_2" symbol="com_is2t_microjvm_mowana_VMTask___registerScopedResource"/>
+			<method name="unregisterResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2" symbol="com_is2t_microjvm_mowana_VMTask___unregisterResource"/>
+			<method name="registerResource__LiceTea_lang_Ram_2LiceTea_lang_Method_2LiceTea_lang_Method_2" symbol="com_is2t_microjvm_mowana_VMTask___registerResource"/>
+			<method name="clearPendingException" symbol="com_is2t_microjvm_mowana_VMTask___clearPendingException"/>
+			<method name="isExceptionPending" symbol="com_is2t_microjvm_mowana_VMTask___isExceptionPending"/>
+			<method name="throwNativeException__ILiceTea_lang_Ram_2Z" symbol="com_is2t_microjvm_mowana_VMTask___throwNativeException"/>
+			<method name="isImmortalArray__LiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___isImmortalArray"/>
+			<method name="checkIntegrity" symbol="com_is2t_microjvm_mowana_VMTask___checkIntegrity"/>
+			<method name="dump" symbol="com_is2t_microjvm_mowana_VMTask___dump"/>
+			<method name="getExitCode" symbol="com_is2t_microjvm_mowana_VMTask___getExitCode"/>
+			<method name="start__ILiceTea_lang_Ram_2" symbol="com_is2t_microjvm_mowana_VMTask___start"/>
+			<method name="initialize" symbol="com_is2t_microjvm_mowana_VMTask___initialize"/>
+		</type>
+	</class>
+</ilink>

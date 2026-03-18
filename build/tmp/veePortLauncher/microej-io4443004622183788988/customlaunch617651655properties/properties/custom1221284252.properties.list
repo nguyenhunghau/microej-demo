@@ -1,0 +1,13 @@
+#Ant properties
+#Thu Mar 19 04:08:00 ICT 2026
+case.sensitivity=caseInsensitive
+com.is2t.edc.assertions.status=false
+com.is2t.java.io.FileSystem=com.is2t.java.io.UnixLikeFileSystem
+com.is2t.system.out.class=
+file.separator=/
+java.io.tmpdir=/tmp
+microedition.platform=${platform.name}
+path.separator=\:
+root.dir=/
+sp.connection.url=
+user.dir=/usr

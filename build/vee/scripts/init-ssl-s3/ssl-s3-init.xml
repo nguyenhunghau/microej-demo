@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ANT Buildfile
+
+  Copyright 2014-2015 IS2T. All rights reserved.
+  IS2T PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+-->
+<project name="ssl-embedded-s3-init">
+
+	<import file="${scripts.dir}/extension-init.xml" />
+
+	<target name="context/ssl-embedded-s3" extensionOf="init/context">
+		
+	</target>
+	
+	<target name="init/ssl-embedded-s3" extensionOf="init/execution" if="onS3">
+		<augment id="hil.main.classpath">
+			<fileset dir="${platform.dir}/mocks" includes="mockSSL.jar"/>
+			<fileset dir="${platform.dir}/javaLibs" includes="sni*.jar"/>
+		</augment>
+		
+		<augment id="init.application.classpath">
+			<fileset dir="${platform.dir}/javaLibs">
+				<include name="ssl-*.jar"/>
+			</fileset>
+			<fileset dir="${platform.dir}/javaLibs">
+				<include name="sni*.jar"/>
+			</fileset>
+		</augment>
+	</target>
+	
+	<target name="finalization/ssl-embedded-s3" extensionOf="init/finalization">
+		
+	</target>
+	
+</project>

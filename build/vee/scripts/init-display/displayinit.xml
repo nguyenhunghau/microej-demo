@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	ANT
+	
+	Copyright 2011-2021 MicroEJ Corp. All rights reserved.
+	This library is provided in source code for use, modification and test, subject to license terms.
+	Any modification of the source code will break MicroEJ Corp. warranties on the whole library.
+-->
+<project name="display"> 
+
+	<dirname file="${ant.file.display}" property="ant.file.display.dir"/>
+	
+	<import file="${ant.file.display.dir}/../extension-init.xml" />
+	<import file="${ant.file.display.dir}/../init-microui/microuiinit.xml" />
+	<import file="${ant.file.display.dir}/../microejAntlib.xml" />
+
+	<target name="init/display" extensionOf="init/execution" depends="init/microui/options, init/microui/thirdparty" if="onBoard">
+		
+		<!-- create tmp dir -->
+		<local name="link.files.dir"/>
+		<microejtempfile deleteonexit="true" prefix="linkDisplay" property="link.files.dir"/>
+		<mkdir dir="${link.files.dir}"/>
+			
+		<!-- get tmp link file name -->
+		<local name="link.sizes"/>
+		<property name="link.sizes" value="${link.files.dir}/sizes.lscf" />
+		
+		<!-- retrieve LCD pixel format -->
+		<loadproperties srcfile="${ant.file.display.dir}/display.properties" prefix="display."/>
+		
+		<!-- min heap value to prevent hardfault during heap initialization -->
+		<property name="ej.microui.memory.imagesheap.size.min" value="100"/>
+			
+		<!-- 
+			default value when 
+				- there is no external font but an external loader (useless when there is no external loader)
+				- there is no font generator 
+		-->
+		<property name="ej.microui.memory.externalfontsheap.size" value="0"/>
+		
+		<!-- create the size file -->
+		<echoxml file="${link.sizes}" append="false">
+			<lscFragment>
+				<defSymbol name="${arch.symbol.prefix}LCD_FORMAT" value="${display.pixel}"/>
+				<defSymbol name="${arch.symbol.prefix}WORKING_BUFFER_SIZE" value="${ej.microui.memory.imagesheap.size}>${ej.microui.memory.imagesheap.size.min}?${ej.microui.memory.imagesheap.size}:${ej.microui.memory.imagesheap.size.min}"/>
+				<defSymbol name="${arch.symbol.prefix}IMAGE_ALIGNMENT" value="${display.imageBuffer.memoryAlignment}"/>
+				<defSymbol name="${arch.symbol.prefix}EXTERNALFONTSHEAP_SIZE" value="${ej.microui.memory.externalfontsheap.size}"/>
+			</lscFragment>
+		</echoxml>
+		
+		<!-- add link file in linker's link files path -->
+		<augment id="partialLink.lscf.path">
+			<path location="${link.files.dir}"/>
+			<path location="${jpf.dir}/link"/>
+		</augment>
+	</target>
+</project>

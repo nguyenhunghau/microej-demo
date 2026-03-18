@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  	ANT
+ 
+  	Copyright 2013-2021 MicroEJ Corp. All rights reserved.
+	MicroEJ Corp. PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<project name="fsEmbeddedImplInit">
+
+	<dirname property="ant.dir.fsEmbeddedImplInit" file="${ant.file.fsEmbeddedImplInit}"/>
+	<import file="${ant.dir.fsEmbeddedImplInit}/../extension-init.xml" />
+	
+	<property name="fs.embedded.java.properties.prefix" value="com.is2t.fs.embedded.java."/>
+	
+	<target name="context/fs-embedded" extensionOf="init/context">
+		<!-- Check if application attempts to use FS -->
+		<available classpath="${application.classpath}" classname="com.is2t.java.io.FileSystem" property="usesFSEMBEDDED"/>
+	</target>
+			
+	<target name="init/fs/impl" extensionOf="init/execution" if="usesFSEMBEDDED">
+	
+		<!--  Augment the classpath with the classes used by FS -->
+		<fail unless="platform.dir"/>
+
+		<fileset dir="${jpf.dir}/javaLibs" includes="resourcemanager-*.jar" id="resourcemanager.id"/>
+		<fail message="Cannot found 'resourcemanager-*.jar' in ${jpf.dir}/javaLibs">
+			<condition>
+				<resourcecount count="0" when="eq" refid="resourcemanager.id" />
+			</condition>
+		</fail>
+
+		<augment id="init.application.classpath">
+			<fileset dir="${platform.dir}/javaLibs" includes="fs-*.jar"/>
+			<fileset dir="${platform.dir}/javaLibs" includes="ej.components-*.jar"/>
+			<fileset dir="${platform.dir}/javaLibs" includes="sni-*.jar"/>
+			<fileset refid="resourcemanager.id" />
+		</augment>
+
+		<!--  Load the property file that was created during platform construction -->
+		<property file="${ant.dir.fsEmbeddedImplInit}/fs.properties" prefix="${fs.embedded.java.properties.prefix}"/>
+		
+		<!-- Checks on mandatory Java properties -->
+		<fail unless="com.is2t.fs.embedded.java.root.dir" message="Property 'root.dir' not specified in '${ant.dir.fsEmbeddedImplInit}/fs.properties' file."/>
+		<fail unless="com.is2t.fs.embedded.java.user.dir" message="Property 'user.dir' not specified in '${ant.dir.fsEmbeddedImplInit}/fs.properties' file."/>
+		<fail unless="com.is2t.fs.embedded.java.java.io.tmpdir" message="Property 'java.io.tmpdir' not specified in '${ant.dir.fsEmbeddedImplInit}/fs.properties' file."/>
+		<fail unless="com.is2t.fs.embedded.java.file.separator" message="Property 'file.separator' not specified in '${ant.dir.fsEmbeddedImplInit}/fs.properties' file."/>
+		<fail unless="com.is2t.fs.embedded.java.path.separator" message="Property 'path.separator' not specified in '${ant.dir.fsEmbeddedImplInit}/fs.properties' file."/>
+		<fail unless="com.is2t.fs.embedded.java.case.sensitivity" message="Property 'case.sensitivity' not specified in '${ant.dir.fsEmbeddedImplInit}/fs.properties' file."/>
+		
+		<!-- Make sure that the property is correctly set. If this fails, it means the platform has been badly constructed -->
+		<fail unless="${fs.embedded.java.properties.prefix}com.is2t.java.io.FileSystem" >
+			The property "com.is2t.java.io.FileSystem" must be set and contain a valid class name.
+			Platform is probably corrupted. Please check FS module configuration and rebuild the platform.
+		</fail>
+
+		<!-- Add this class to the required type -->
+		<augment id="init.requires">
+			<string value="com.is2t.java.io.FileSystem"/>
+			<string value="${com.is2t.fs.embedded.java.com.is2t.java.io.FileSystem}"/>
+		</augment>
+		
+		<!--fs embedded java properties (user.dir, root.dir...)-->
+		<augment id="init.properties">
+			<propertyref prefix="${fs.embedded.java.properties.prefix}"/>
+			<globmapper from="${fs.embedded.java.properties.prefix}*" to="*"/>
+		</augment>
+		
+	</target>
+	
+</project>

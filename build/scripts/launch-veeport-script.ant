@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright 2022-2025 MicroEJ Corp. All rights reserved.
+This library is provided in source code for use, modification and test, subject to license terms.
+Any modification of the source code will break MicroEJ Corp. warranties on the whole library.
+-->
+<project name="veePortLauncher" default="launchScript">
+    <target name="launchScript" depends="launchScript.18.or.above, launchScript.11.to.17"/>
+
+    <target name="launchScript.18.or.above" depends="launchScriptConf" unless="is.java.11.to.17">
+        <java classname="org.apache.tools.ant.launch.Launcher" fork="true" failonerror="true">
+            <classpath refid="ant.classpath"/>
+            <arg value="-buildfile"></arg>
+            <arg value="${veePort.script.build.file}"></arg>
+            <arg value="-propertyfile"></arg>
+            <arg value="${launch.properties.file}"></arg>
+            <arg line="-logger ${custom.logger.class} ${custom.logger.level}"></arg>
+            <arg value="-emacs"></arg>
+            <jvmarg line="${custom.jvmargs}"/>
+            <jvmarg value="-Djava.library.path=${java.library.path}"></jvmarg>
+            <jvmarg value="-Dapplication.classpath=${application.classpath}"></jvmarg>
+            <jvmarg value="-Djava.security.manager=allow"></jvmarg>
+        </java>
+    </target>
+
+    <target name="launchScript.11.to.17" depends="launchScriptConf" if="is.java.11.to.17">
+        <java classname="org.apache.tools.ant.launch.Launcher" fork="true" failonerror="true">
+            <classpath refid="ant.classpath"/>
+            <arg value="-buildfile"></arg>
+            <arg value="${veePort.script.build.file}"></arg>
+            <arg value="-propertyfile"></arg>
+            <arg value="${launch.properties.file}"></arg>
+            <arg line="-logger ${custom.logger.class} ${custom.logger.level}"></arg>
+            <arg value="-emacs"></arg>
+            <jvmarg line="${custom.jvmargs}"/>
+            <jvmarg value="-Djava.library.path=${java.library.path}"></jvmarg>
+            <jvmarg value="-Dapplication.classpath=${application.classpath}"></jvmarg>
+        </java>
+    </target>
+
+    <target name="launchScriptConf">
+        <condition property="is.java.11.to.17">
+            <matches pattern="^1[1-7].*" string="${java.version}"/>
+        </condition>
+
+        <dirname property="antlib.dir" file="${ant.core.lib}"/>
+        <dirname property="script.dir" file="${ant.file}"/>
+        <loadproperties srcFile="${launch.properties.file}"/>
+
+        <property name="custom.logger.class" value="com.microej.gradle.CustomAntLogger"/>
+        <property name="custom.logger.level" value=""/>
+        <property name="custom.jvmargs" value=""/>
+
+        <path id="ant.classpath">
+            <pathelement path="${classpath}"/>
+        </path>
+    </target>
+</project>
