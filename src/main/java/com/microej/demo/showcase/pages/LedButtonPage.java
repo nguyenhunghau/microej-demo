@@ -148,7 +148,7 @@ public class LedButtonPage implements Page {
 			GPIO.setDigitalValue(LED_PORT, LED_PIN, this.ledOn);
 			this.ledStatusLabel.setText("LED: " + (this.ledOn ? "ON" : "OFF"));
 			this.ledStatusLabel.requestRender();
-			setResult("GPIO.setDigitalValue(" + LED_PORT + "," + LED_PIN + "," + this.ledOn + ") OK");
+			setResult("GPIO.setDigitalValue(" + LED_PORT + "," + LED_PIN + "," + this.ledOn + ")  OK");
 		} catch (Throwable t) {
 			setResult("LED: " + t.getClass().getName() + " (no BSP on simulator)");
 		}
