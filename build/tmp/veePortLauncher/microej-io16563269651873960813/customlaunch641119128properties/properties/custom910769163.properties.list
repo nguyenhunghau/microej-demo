@@ -1,6 +1,0 @@
-#Ant properties
-#Wed Mar 18 22:27:42 ICT 2026
-com.is2t.edc.assertions.status=false
-com.is2t.system.out.class=
-microedition.platform=${platform.name}
-sp.connection.url=
