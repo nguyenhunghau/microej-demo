@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk" name="nxpvee-mimxrt1170-evk">
+                <projects>
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/apps" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/apps/HelloWorld" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/apps/aiSample" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/apps/animatedMascot" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/apps/simpleGFX" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/extensions/front-panel" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/extensions/image-generator" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/mock" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/ai" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/core" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/event-queue" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/fs" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/gpio" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/net" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/security" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/ssl" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/ui" />
+                  <project path="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/vg" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="ms-11" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/apps" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/apps/HelloWorld" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/apps/aiSample" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/apps/animatedMascot" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/apps/simpleGFX" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/extensions/front-panel" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/extensions/image-generator" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/mock" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/ai" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/core" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/event-queue" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/fs" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/gpio" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/net" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/security" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/ssl" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/ui" />
+            <option value="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/vee-port/validation/vg" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/../microejShowcase/microejShowcase" />
+        <option name="gradleJvm" value="ms-11" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

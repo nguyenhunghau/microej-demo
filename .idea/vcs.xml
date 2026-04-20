@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/core" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/core/CMSIS" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/coreHTTP" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/eiq" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/eiq/tensorflow-lite" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/fatfs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/lwip" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/mbedtls" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/sdmmc" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/wifi_nxp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/rtos/freertos/freertos-kernel" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/core" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/core/CMSIS" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/coreHTTP" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/eiq" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/eiq/tensorflow-lite" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/fatfs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/lwip" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/mbedtls" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/sdmmc" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/wifi_nxp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../test/nxpvee-mimxrt1170-prj/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/rtos/freertos/freertos-kernel" vcs="Git" />
+  </component>
+</project>
