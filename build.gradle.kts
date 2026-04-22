@@ -22,8 +22,9 @@ dependencies {
     implementation("ej.library.eclasspath:logging:1.2.1")
 
     // UI stack (align versions with the included `microej-ui` build)
-    implementation("ej.api:microui:3.1.0")
-    implementation("ej.api:drawing:1.0.2")
+    implementation("ej.api:microui:3.6.0")
+    implementation("ej.api:drawing:1.0.5")
+    implementation("ej.api:microvg:1.5.0")
     implementation("ej.library.ui:widget:5.3.1")
     implementation("ej.library.runtime:basictool:1.5.0")
     implementation("ej.library.runtime:service:1.1.1")

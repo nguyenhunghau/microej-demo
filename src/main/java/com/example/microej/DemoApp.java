@@ -46,6 +46,7 @@ public class DemoApp {
 //            new SecurityPage(),
             new AiPage(),
 //            new EventQueuePage(),
+            new AnimatedMascotPage(),
     };
 
     private DemoApp() {}
