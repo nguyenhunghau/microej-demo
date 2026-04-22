@@ -92,25 +92,14 @@ public class AnimatedMascotPage implements Page {
             buildMascotMatrix(getWidth(), getHeight());
 
             getDesktop().getAnimator().startAnimation(this);
-
-            // Register as pointer event handler.
-            ej.microui.event.EventGenerator[] gens =
-                    ej.microui.event.EventGenerator.get(Pointer.class);
-            for (ej.microui.event.EventGenerator gen : gens) {
-                gen.setEventHandler(this);
-            }
+            // MWT routes pointer events to this widget automatically via its bounds —
+            // no need to register a global EventGenerator handler, which would steal
+            // all touch events (including the "< Menu" button) from the rest of the UI.
         }
 
         @Override
         protected void onHidden() {
             getDesktop().getAnimator().stopAnimation(this);
-
-            // Remove our pointer handler.
-            ej.microui.event.EventGenerator[] gens =
-                    ej.microui.event.EventGenerator.get(Pointer.class);
-            for (ej.microui.event.EventGenerator gen : gens) {
-                gen.setEventHandler(null);
-            }
 
             // Close resources.
             if (this.haloImage instanceof ResourceImage) {
@@ -187,9 +176,11 @@ public class AnimatedMascotPage implements Page {
                 if (action == Buttons.PRESSED) {
                     Pointer pointer = (Pointer) Event.getGenerator(event);
                     addTouchAnimation(pointer.getX(), pointer.getY());
+                    return true; // consumed: ripple added
                 }
+                return true; // other pointer actions (move, release) also consumed by this widget
             }
-            return true;
+            return false; // non-pointer events: let MWT propagate normally
         }
 
         // ---- Helpers --------------------------------------------------------

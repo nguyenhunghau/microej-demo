@@ -22,6 +22,11 @@ public final class NativeDriverIntegration {
 	 * (does not collide with valid centi-Celsius in roughly {@code -8000..15000}).
 	 */
 	public static final int MCU_TEMP_READ_INVALID = -30000;
+	/**
+	 * Sentinel returned by {@link #getBoardCurrentMilliAmps()} when current measurement
+	 * is not available on the current BSP/hardware setup.
+	 */
+	public static final int POWER_CURRENT_INVALID = -1;
 
 	private NativeDriverIntegration() {
 	}
@@ -100,4 +105,155 @@ public final class NativeDriverIntegration {
 	 *         {@link #MCU_TEMP_READ_INVALID} if the sample is out of range or the peripheral failed.
 	 */
 	public static native int getMcuTempCentiCelsius();
+
+	/**
+	 * Reads board current in milli-amps using BSP-specific instrumentation.
+	 * <p>
+	 * Typical implementation options:
+	 * <ul>
+	 *   <li>external power monitor over I2C (INA219/INA226, etc.)</li>
+	 *   <li>on-board measurement circuitry if available</li>
+	 * </ul>
+	 *
+	 * @return current in mA, or {@link #POWER_CURRENT_INVALID} if unsupported/unavailable.
+	 */
+	public static native int getBoardCurrentMilliAmps();
+
+	/**
+	 * Board-level (native) memory: total bytes available to the C heap/allocator used by the platform.
+	 * <p>
+	 * This is NOT the Java heap. It is intended to report real device memory (e.g., FreeRTOS heap,
+	 * or another native allocator), when implemented by the VEE Port.
+	 *
+	 * @return total native heap bytes, or -1 if unsupported.
+	 */
+	public static native long getNativeHeapTotalBytes();
+
+	/**
+	 * Board-level (native) memory: free bytes available to the C heap/allocator used by the platform.
+	 *
+	 * @return free native heap bytes, or -1 if unsupported.
+	 */
+	public static native long getNativeHeapFreeBytes();
+
+	/** DHCP state constants — must match lwip_util.c */
+	public static final int DHCP_START            = 1;
+	public static final int DHCP_WAIT_ADDRESS     = 2;
+	public static final int DHCP_ADDRESS_ASSIGNED = 3;
+	public static final int DHCP_TIMEOUT          = 4;
+	public static final int DHCP_LINK_DOWN        = 5;
+
+	/**
+	 * Returns the IPv4 address of the default lwIP network interface (netif_default->ip_addr.addr)
+	 * as a 32-bit value in network byte order. Returns 0 when no address has been assigned yet.
+	 * <p>
+	 * Convert to dotted-decimal in Java:
+	 * <pre>
+	 *   int ip = getNetworkIpInt();
+	 *   String s = (ip&amp;0xFF)+"."+((ip&gt;&gt;8)&amp;0xFF)+"."+((ip&gt;&gt;16)&amp;0xFF)+"."+((ip&gt;&gt;24)&amp;0xFF);
+	 * </pre>
+	 *
+	 * @return 32-bit IPv4 address, or 0 if not assigned / netif not ready.
+	 */
+	public static native int getNetworkIpInt();
+
+	/**
+	 * Returns the current DHCP state from the C layer (g_dhcp_state in lwip_util.c).
+	 * Compare with {@link #DHCP_START}, {@link #DHCP_WAIT_ADDRESS}, {@link #DHCP_ADDRESS_ASSIGNED},
+	 * {@link #DHCP_TIMEOUT}, {@link #DHCP_LINK_DOWN}.
+	 *
+	 * @return DHCP state code, or -1 if unsupported.
+	 */
+	public static native int getDhcpState();
+
+	/**
+	 * Returns 1 if the default lwIP network interface has physical link up
+	 * ({@code netif_is_link_up(netif_default)}), 0 if link is down or netif is null.
+	 */
+	public static native int isNetworkLinkUp();
+
+	/**
+	 * Returns the {@code netif->flags} bitmask of {@code netif_default} (e.g. 0xE7).
+	 * Useful for diagnosing NETIF_FLAG_UP (0x01), NETIF_FLAG_LINK_UP (0x40), etc.
+	 * Returns -1 if netif_default is NULL.
+	 */
+	public static native int getNetifFlags();
+
+	/**
+	 * Returns the {@code netif->num} of {@code netif_default}.
+	 * 0 = eth0 (ENET, 100M), 1 = eth1 (ENET_1G, 1Gbps).
+	 * Returns -1 if netif_default is NULL.
+	 */
+	public static native int getNetifNum();
+
+	/**
+	 * Returns one byte of the MAC address of {@code netif_default}.
+	 * {@code index} must be 0..5. Returns -1 if netif_default is NULL or index out of range.
+	 */
+	public static native int getNetifMacByte(int index);
+
+	/**
+	 * Returns a bitmask of link state for ALL known netifs:
+	 * bit 0 = g_netif0 link up, bit 1 = g_netif1 link up.
+	 * Allows checking both Ethernet ports at once.
+	 * Returns -1 if neither port is available.
+	 */
+	public static native int getAllNetifLinkMask();
+
+	/** Formats a MAC address from 6 calls to {@link #getNetifMacByte}. */
+	public static String readNetifMac() {
+		try {
+			StringBuffer sb = new StringBuffer();
+			for (int i = 0; i < 6; i++) {
+				if (i > 0) {
+					sb.append(':');
+				}
+				int b = getNetifMacByte(i) & 0xFF;
+				if (b < 0x10) {
+					sb.append('0');
+				}
+				sb.append(Integer.toHexString(b));
+			}
+			return sb.toString();
+		} catch (Throwable t) {
+			return "MAC read failed";
+		}
+	}
+
+	/** Decodes {@link #getNetifFlags()} into a human-readable string. */
+	public static String describeNetifFlags(int flags) {
+		if (flags < 0) {
+			return "netif=NULL";
+		}
+		StringBuffer sb = new StringBuffer("0x");
+		sb.append(Integer.toHexString(flags));
+		sb.append(" [");
+		if ((flags & 0x01) != 0) { sb.append("UP "); }
+		if ((flags & 0x02) != 0) { sb.append("BROADCAST "); }
+		if ((flags & 0x04) != 0) { sb.append("POINTTOPOINT "); }
+		if ((flags & 0x08) != 0) { sb.append("DHCP "); }
+		if ((flags & 0x10) != 0) { sb.append("IGMP "); }
+		if ((flags & 0x20) != 0) { sb.append("MLD6 "); }
+		if ((flags & 0x40) != 0) { sb.append("LINK_UP "); }
+		if ((flags & 0x80) != 0) { sb.append("ETHARP "); }
+		sb.append("]");
+		return sb.toString();
+	}
+
+	/** Formats the value returned by {@link #getNetworkIpInt()} to a dotted-decimal string. */
+	public static String formatIpInt(int addr) {
+		return (addr & 0xFF) + "." + ((addr >> 8) & 0xFF) + "." + ((addr >> 16) & 0xFF) + "." + ((addr >> 24) & 0xFF);
+	}
+
+	/** Human-readable DHCP state label. */
+	public static String describeDhcpState(int state) {
+		switch (state) {
+			case DHCP_START:            return "DHCP starting...";
+			case DHCP_WAIT_ADDRESS:     return "DHCP waiting for address...";
+			case DHCP_ADDRESS_ASSIGNED: return "DHCP address assigned";
+			case DHCP_TIMEOUT:          return "DHCP timeout (no server?)";
+			case DHCP_LINK_DOWN:        return "Link down (check cable)";
+			default:                    return "DHCP state: " + state;
+		}
+	}
 }

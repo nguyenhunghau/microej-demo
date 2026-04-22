@@ -3,7 +3,7 @@
  */
 package com.example.microej;
 
-
+import com.example.microej.bench.StartupProbe;
 import ej.microui.MicroUI;
 
 /**
@@ -13,8 +13,27 @@ import ej.microui.MicroUI;
  */
 public class Main {
 
-    public static void main(String[] args) {
-        MicroUI.start();
-        DemoApp.showMenu();
-    }
+	static {
+		// As early as we can in application code.
+		try {
+			StartupProbe.markAppClassLoaded();
+		} catch (Throwable ignored) {
+			// ignore
+		}
+	}
+
+	public static void main(String[] args) {
+		try {
+			System.out.println("[App] main() start");
+		} catch (Throwable ignored) {
+			// ignore
+		}
+		MicroUI.start();
+		DemoApp.showMenu();
+		try {
+			System.out.println("[App] UI requested (menu)");
+		} catch (Throwable ignored) {
+			// ignore
+		}
+	}
 }

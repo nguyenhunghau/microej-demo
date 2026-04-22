@@ -2,6 +2,12 @@
 
 MicroEJ Application: `microej`.
 
+## Benchmarks
+
+This app includes a built-in benchmark/self-test page.
+
+- Detailed documentation: see `BENCHMARKS.md`
+
 # Usage
 
 Add the following line to your `build.gradle.kts`:

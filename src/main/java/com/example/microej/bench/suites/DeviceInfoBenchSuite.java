@@ -12,7 +12,7 @@ public class DeviceInfoBenchSuite implements BenchSuite {
 	public BenchCase[] getCases() {
 		return new BenchCase[] {
 			new BenchCase() {
-				@Override public String getName() { return "Device.getArchitecture + Device.getId"; }
+				@Override public String getName() { return "Device: "; }
 				@Override public BenchResult run() {
 					long start = BenchUtil.nowMs();
 					try {

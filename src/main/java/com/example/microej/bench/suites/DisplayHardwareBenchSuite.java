@@ -35,8 +35,12 @@ public class DisplayHardwareBenchSuite implements BenchSuite {
 					long start = BenchUtil.nowMs();
 					try {
 						int ver = NativeDriverFacade.getDriverVersion();
-						BenchUtil.require(ver >= 0, "driver version negative: " + ver);
-						return BenchUtil.pass(getName(), start, "ver=" + ver);
+						if (ver < 0) {
+							return BenchUtil.skip(getName(), start, "Native driver integration not available");
+						}
+						BenchResult r = BenchUtil.pass(getName(), start, "ver=" + ver);
+						r.metrics = BenchMetrics.of("native.driver.version", String.valueOf(ver));
+						return r;
 					} catch (Throwable t) {
 						return BenchUtil.fail(getName(), start, t);
 					}

@@ -2,6 +2,7 @@ package com.example.microej.pages;
 
 import com.example.microej.AppStyle;
 import com.example.microej.Page;
+import com.example.microej.RuntimeEnv;
 import com.example.microej.bench.*;
 import com.example.microej.bench.suites.*;
 
@@ -76,7 +77,7 @@ public class BenchmarkPage implements Page {
 		List main = new List(LayoutOrientation.VERTICAL);
 
 		section(main, "\u25b6  Benchmarks / Self-tests");
-		info(main, "Runs a small suite for each page (some hardware tests may be SKIP in simulator).");
+		info(main, "Runs a small suite for each page.");
 
 		Button runBtn = new Button("Run All Benchmarks");
 		runBtn.addClassSelector(ACTION_BTN);
@@ -95,19 +96,42 @@ public class BenchmarkPage implements Page {
 		section(main, "\u25b6  Results");
 		this.results = new List(LayoutOrientation.VERTICAL);
 		main.addChild(this.results);
-
+//		runAll();
 		return main;
+	}
+
+	// Remove BON dependency: ej.bon.Util isn't always available.
+	// (RuntimeEnv is best-effort and can be forced in simulator with -Dapp.simulator=true)
+
+	private static void log(String msg) {
+		try {
+            if(msg.isEmpty()) {
+                System.out.println();
+                return;
+            }
+			System.out.println("[Bench] " + msg);
+		} catch (Throwable ignored) {
+			// ignore
+		}
 	}
 
 	private void runAll() {
 		this.results.removeAllChildren();
 
+		log("RunAll start (env=" + RuntimeEnv.getEnvLabel() + ")");
+
 		BenchSuite[] suites = new BenchSuite[] {
+				new StartupBenchSuite(),
 				new DeviceInfoBenchSuite(),
+				new MemoryBenchSuite(),
+				new com.example.microej.bench.suites.CpuBenchSuite(),
+				new com.example.microej.bench.suites.JavaPerfBenchSuite(),
+				new NetworkBenchSuite(),
 				new DisplayHardwareBenchSuite(),
-				new TouchHardwareBenchSuite(),
+//				new TouchHardwareBenchSuite(),
 				new McuTempBenchSuite(),
-				new FileSystemBenchSuite()
+//				new FileSystemBenchSuite(),
+//				new com.example.microej.bench.suites.PowerBenchSuite()
 		};
 
 		int pass = 0, fail = 0, skip = 0;
@@ -115,32 +139,71 @@ public class BenchmarkPage implements Page {
 
 		for (int s = 0; s < suites.length; s++) {
 			BenchSuite suite = suites[s];
+			log("Suite: " + suite.getName());
 			addLine("[SUITE] " + suite.getName());
 			BenchResult[] rs = BenchRunner.runSuite(suite);
 			for (int i = 0; i < rs.length; i++) {
 				BenchResult r = rs[i];
+				log("  " + r.status + " " + r.name + " (" + r.durationMs + " ms)" + (r.details != null && r.details.length() > 0 ? (" - " + r.details) : ""));
 				if (r.status == BenchStatus.PASS) pass++;
 				else if (r.status == BenchStatus.FAIL) fail++;
 				else skip++;
 
-				String line = "  [" + r.status + "] " + r.name + "  (" + r.durationMs + " ms)";
+				String line = r.name + "  (" + r.durationMs + " ms)";
+				String extra = "";
 				if (r.details != null && r.details.length() > 0) {
-					line += "  -  " + r.details;
+					extra = r.details;
+				}
+				String metrics = formatMetrics(r.metrics);
+				if (metrics.length() > 0) {
+					if (extra.length() > 0) {
+						extra += " | " + metrics;
+					} else {
+						extra = metrics;
+					}
+				}
+				if (extra.length() > 0) {
+					line += "  -  " + extra;
 				}
 				addLine(line);
 			}
+			log("");
 		}
 
 		long dur = Math.max(0, BenchUtil.nowMs() - startAll);
+		log("RunAll done in " + dur + " ms (PASS=" + pass + " FAIL=" + fail + " SKIP=" + skip + ")");
 		this.summary.setText("Done in " + dur + " ms  |  PASS=" + pass + "  FAIL=" + fail + "  SKIP=" + skip);
 		this.summary.requestRender();
 		this.results.requestRender();
 	}
 
+	private static String formatMetrics(BenchMetrics m) {
+		if (m == null || m.keys == null || m.values == null) {
+			return "";
+		}
+		int n = Math.min(m.keys.length, m.values.length);
+		if (n <= 0) {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder(64);
+		for (int i = 0; i < n; i++) {
+			String k = m.keys[i];
+			String v = m.values[i];
+			if (k == null || v == null) {
+				continue;
+			}
+			if (sb.length() > 0) {
+				sb.append(' ');
+			}
+			sb.append(k).append('=').append(v);
+		}
+		return sb.toString();
+	}
+
 	private void addLine(String t) {
-		Label l = new Label(t);
-		l.addClassSelector(RESULT);
-		this.results.addChild(l);
+//		Label l = new Label(t);
+//		l.addClassSelector(RESULT);
+//		this.results.addChild(l);
 	}
 
 	private void section(List p, String t) { Label l = new Label(t); l.addClassSelector(SECTION); p.addChild(l); }

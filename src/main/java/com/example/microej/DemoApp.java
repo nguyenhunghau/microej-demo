@@ -1,5 +1,6 @@
 package com.example.microej;
 
+import com.example.microej.bench.StartupProbe;
 import com.example.microej.pages.*;
 import ej.microui.display.Colors;
 import ej.microui.display.Display;
@@ -44,9 +45,10 @@ public class DemoApp {
             new NetworkPage(),
 //            new FileSystemPage(),
 //            new SecurityPage(),
-            new AiPage(),
+//            new AiPage(),
 //            new EventQueuePage(),
             new AnimatedMascotPage(),
+            new BenchmarkPage(),
     };
 
     private DemoApp() {}
@@ -70,8 +72,14 @@ public class DemoApp {
         desktop.setStylesheet(new CachedStylesheet(ss));
         desktop.setWidget(root);
         Display.getDisplay().requestShow(desktop);
+        try {
+			StartupProbe.markUiFirstScreenShown();
+			System.out.println("[App] First screen requested (menu)");
+		} catch (Throwable ignored) {
+			// ignore
+		}
 
-//        showPage(5);
+//        showPage(6);
     }
 
     private static Widget makeCard(final int idx) {
@@ -98,6 +106,7 @@ public class DemoApp {
         backBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick() {
+                System.out.println("[App] Back to menu");
                 showMenu();
             }
         });
@@ -120,6 +129,13 @@ public class DemoApp {
         desktop.setStylesheet(new CachedStylesheet(ss));
         desktop.setWidget(root);
         Display.getDisplay().requestShow(desktop);
+        try {
+			// If the app boots straight into a page, or if menu wasn't shown for some reason,
+			// we still want a stable startup mark.
+			StartupProbe.markUiFirstScreenShown();
+		} catch (Throwable ignored) {
+			// ignore
+		}
     }
 
     private static void styleMenu(CascadingStylesheet ss) {

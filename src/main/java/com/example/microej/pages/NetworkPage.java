@@ -1,6 +1,7 @@
 package com.example.microej.pages;
 
 import com.example.microej.AppStyle;
+import com.example.microej.NativeDriverIntegration;
 import com.example.microej.Page;
 import ej.microui.display.Colors;
 import ej.mwt.Widget;
@@ -45,6 +46,9 @@ public class NetworkPage implements Page {
 
     /** Host used for DNS / TCP / HTTP demos (port 80). */
     private static final String DEMO_HOST = "microej.com";
+    /** Target URL to test: automationpractice.com */
+    private static final String TARGET_HOST = "automationpractice.com";
+    private static final String TARGET_PATH = "/index.php";
     /** HTTPS demo (port 443). */
     private static final int HTTPS_PORT = 443;
     private static final int SOCKET_TIMEOUT_MS = 15000;
@@ -52,6 +56,7 @@ public class NetworkPage implements Page {
     private static final int LOG_MAX_LINES = 200;
 
     private Label resultLabel;
+    private Label ipLabel;
     private List  logList;
     private int   logCount;
 
@@ -109,19 +114,31 @@ public class NetworkPage implements Page {
     public Widget getContentWidget() {
         List main = new List(LayoutOrientation.VERTICAL);
 
-        section(main, "\u25b6  Local stack  (runtime)");
+        section(main, "\u25b6  Network Cape  -  Board IP Address");
         info(main, "Java Sockets  \u2192  LLNET  \u2192  lwIP on this VEE port");
 
-        // Buttons are kept as optional manual triggers, but we also run the same actions automatically.
-        Button ifBtn = new Button("List interfaces  (NetworkInterface)");
+        this.ipLabel = new Label("Detecting IP address...");
+        this.ipLabel.addClassSelector(RESULT);
+        main.addChild(this.ipLabel);
+
+        Button ifBtn = new Button("Refresh  -  List network interfaces");
         ifBtn.addClassSelector(ACTION_BTN);
         ifBtn.setOnClickListener(new OnClickListener() {
             @Override public void onClick() { listInterfaces(); }
         });
         main.addChild(ifBtn);
 
+        section(main, "\u25b6  HTTP GET  \u2192  " + TARGET_HOST);
+        info(main, "Target: http://" + TARGET_HOST + TARGET_PATH);
 
-        this.resultLabel = new Label("Loading network info...");
+        Button targetBtn = new Button("Connect: http://" + TARGET_HOST + TARGET_PATH);
+        targetBtn.addClassSelector(ACTION_BTN);
+        targetBtn.setOnClickListener(new OnClickListener() {
+            @Override public void onClick() { doHttpGetTarget(); }
+        });
+        main.addChild(targetBtn);
+
+        this.resultLabel = new Label("Press button or wait for auto-run...");
         this.resultLabel.addClassSelector(RESULT);
         main.addChild(this.resultLabel);
 
@@ -130,6 +147,8 @@ public class NetworkPage implements Page {
         main.addChild(this.logList);
 
         listInterfaces();
+
+        doHttpGetTarget();
 
 //        Button localBtn = new Button("Local host  (InetAddress.getLocalHost)");
 //        localBtn.addClassSelector(ACTION_BTN);
@@ -208,23 +227,26 @@ public class NetworkPage implements Page {
         log("Collecting network info...");
 
         // Fast / local calls first (should be quick)
-        safeStep("LOCAL", new Step() {
-            @Override public void run() { readLocalHost(false /*clear*/); }
-        });
-
-        // Remote calls may block.
-        safeStep("DNS", new Step() {
-            @Override public void run() { doDnsLookup(false /*clear*/); }
-        });
-        safeStep("TCP", new Step() {
-            @Override public void run() { doTcpConnect(false /*clear*/); }
-        });
-        safeStep("HTTP", new Step() {
-            @Override public void run() { doHttpGet(false /*clear*/); }
-        });
-        safeStep("TLS", new Step() {
-            @Override public void run() { doTlsHandshake(false /*clear*/); }
-        });
+//        safeStep("LOCAL", new Step() {
+//            @Override public void run() { readLocalHost(false /*clear*/); }
+//        });
+//
+//        // Remote calls may block.
+//        safeStep("DNS", new Step() {
+//            @Override public void run() { doDnsLookup(false /*clear*/); }
+//        });
+//        safeStep("TCP", new Step() {
+//            @Override public void run() { doTcpConnect(false /*clear*/); }
+//        });
+//        safeStep("HTTP", new Step() {
+//            @Override public void run() { doHttpGet(false /*clear*/); }
+//        });
+//        safeStep("TLS", new Step() {
+//            @Override public void run() { doTlsHandshake(false /*clear*/); }
+//        });
+//        safeStep("TARGET", new Step() {
+//            @Override public void run() { doHttpGetTarget(false /*clear*/); }
+//        });
 
         result("Network check complete.");
         debugPrint("[AUTO] complete");
@@ -291,42 +313,118 @@ public class NetworkPage implements Page {
     private void listInterfaces() { listInterfaces(true); }
 
     private void listInterfaces(boolean clear) {
-//        if (clear && !this.autoMode) {
-//            clearLog();
-//        }
         this.lastStepStatus = 0;
+
+        // ── 1. Native path: link state + IP + DHCP state from lwIP ──────────────
+        String nativeIp = null;
+        int dhcpState = -1;
+        boolean linkUp = false;
+        // Retry up to 4 times (0, 500ms, 1000ms, 1500ms) to allow PHY to detect link
+        for (int attempt = 0; attempt <= 3; attempt++) {
+            if (attempt > 0) {
+                try { Thread.sleep(500); } catch (Throwable ignored) {}
+                log("[IF] retry #" + attempt + "...");
+            }
+            try {
+                linkUp = NativeDriverIntegration.isNetworkLinkUp() != 0;
+                int flags = NativeDriverIntegration.getNetifFlags();
+                int num   = NativeDriverIntegration.getNetifNum();
+                dhcpState = NativeDriverIntegration.getDhcpState();
+                int ipInt = NativeDriverIntegration.getNetworkIpInt();
+                int linkMask = NativeDriverIntegration.getAllNetifLinkMask();
+                String mac = NativeDriverIntegration.readNetifMac();
+
+                log("[IF] netif" + num
+                        + " flags=" + NativeDriverIntegration.describeNetifFlags(flags)
+                        + " link=" + (linkUp ? "UP" : "DOWN"));
+                log("[IF] DHCP: " + NativeDriverIntegration.describeDhcpState(dhcpState));
+                log("[IF] IP=0x" + Integer.toHexString(ipInt)
+                        + " allLinkMask=0x" + Integer.toHexString(linkMask));
+                log("[IF] MAC=" + mac);
+                debugPrint("[IF] netif" + num + " flags=0x" + Integer.toHexString(flags)
+                        + " link=" + linkUp + " dhcp=" + dhcpState
+                        + " ip=0x" + Integer.toHexString(ipInt)
+                        + " allLinkMask=0x" + Integer.toHexString(linkMask)
+                        + " mac=" + mac);
+
+                if (ipInt != 0) {
+                    nativeIp = NativeDriverIntegration.formatIpInt(ipInt);
+                    log("[IF] IP: " + nativeIp);
+                }
+            } catch (Throwable t) {
+                log("[IF] native call failed: " + t.getClass().getSimpleName());
+                debugException("[IF] native", t);
+            }
+            if (linkUp || nativeIp != null) {
+                break; // link is up, no need to retry
+            }
+        }
+
+        // ── 2. Java fallback: NetworkInterface.getNetworkInterfaces() ────────────
         log("[IF] NetworkInterface.getNetworkInterfaces()");
+        String javaIp = null;
         try {
             Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
-            int n = 0;
             while (en.hasMoreElements()) {
                 NetworkInterface ni = en.nextElement();
-                n++;
                 String name = ni.getName();
-                String up;
-                try {
-                    up = ni.isUp() ? "up" : "down";
-                } catch (Throwable t) {
-                    up = "?";
-                }
-                log("[IF] " + name + " (" + up + ")");
+                String upStr;
+                try { upStr = ni.isUp() ? "up" : "down"; } catch (Throwable t) { upStr = "?"; }
+                log("[IF] " + name + " (" + upStr + ")");
                 Enumeration<InetAddress> ads = ni.getInetAddresses();
                 while (ads.hasMoreElements()) {
                     InetAddress a = ads.nextElement();
-                    log("[IF]   addr: " + a.getHostAddress());
+                    String addr = a.getHostAddress();
+                    log("[IF]   addr: " + addr);
+                    boolean isUnspecified = a.isAnyLocalAddress()
+                            || "0.0.0.0".equals(addr) || addr.startsWith("0.");
+                    if (javaIp == null && !a.isLoopbackAddress() && !isUnspecified) {
+                        javaIp = addr;
+                    }
                 }
             }
-            result("Interfaces listed: " + n + " (runtime)");
         } catch (SocketException e) {
             this.lastStepStatus = -1;
-            log("[IF] ERROR: " + e.getMessage());
+            log("[IF] Java scan ERROR: " + e.getMessage());
             debugException("[IF] SocketException", e);
-            result("List interfaces failed: " + e.getMessage());
         } catch (Throwable t) {
             this.lastStepStatus = -2;
-            log("[IF] ERROR: " + t.getClass().getSimpleName());
+            log("[IF] Java scan ERROR: " + t.getClass().getSimpleName());
             debugException("[IF] Exception", t);
-            result("List interfaces failed: " + t.getClass().getSimpleName());
+        }
+
+        // ── 3. Display based on real link + DHCP state ────────────────────────────
+        int linkMaskForDisplay = -1;
+        int netifNumForDisplay = -1;
+        try {
+            linkMaskForDisplay = NativeDriverIntegration.getAllNetifLinkMask();
+            netifNumForDisplay = NativeDriverIntegration.getNetifNum();
+        } catch (Throwable ignored) {}
+
+        // Which port hint for user: num 0 = ENET0 100M (J4), num 1 = ENET1 1G (J43)
+        String portHint = netifNumForDisplay == 0 ? " [plug cable into J4  (100M)]"
+                        : netifNumForDisplay == 1 ? " [plug cable into J43 (1G)]" : "";
+
+        if (nativeIp != null) {
+            setIp("IP: " + nativeIp + "  [" + NativeDriverIntegration.describeDhcpState(dhcpState) + "]");
+            debugPrint("[IF] Board IP (native): " + nativeIp);
+        } else if (javaIp != null) {
+            setIp("IP: " + javaIp + "  [Java stack]");
+            debugPrint("[IF] Board IP (java): " + javaIp);
+        } else if (!linkUp) {
+            // Tell user exactly which port the firmware expects
+            setIp("Link DOWN" + portHint + "  -  check cable / cape");
+            debugPrint("[IF] Link physically DOWN. allLinkMask=0x"
+                    + Integer.toHexString(linkMaskForDisplay)
+                    + " netifNum=" + netifNumForDisplay);
+        } else if (dhcpState == NativeDriverIntegration.DHCP_TIMEOUT) {
+            setIp("Link UP  |  DHCP timeout  -  no DHCP server found");
+        } else if (dhcpState == NativeDriverIntegration.DHCP_LINK_DOWN) {
+            setIp("Link UP (LEDs) but lwIP sees link down  -  replug cable");
+        } else {
+            setIp("Link UP" + portHint + "  |  "
+                    + NativeDriverIntegration.describeDhcpState(dhcpState)
+                    + "  (press Refresh)");
         }
     }
 
@@ -490,6 +588,86 @@ public class NetworkPage implements Page {
         }
     }
 
+    private void doHttpGetTarget() { doHttpGetTarget(true); }
+
+    private void doHttpGetTarget(boolean clear) {
+        if (clear && !this.autoMode) {
+            clearLog();
+        }
+        this.lastStepStatus = 0;
+        log("[TARGET] HTTP GET  http://" + TARGET_HOST + TARGET_PATH);
+        Socket s = null;
+        try {
+            log("[TARGET] Resolving " + TARGET_HOST + "...");
+            InetAddress addr = InetAddress.getByName(TARGET_HOST);
+            log("[TARGET] Resolved  \u2192  " + addr.getHostAddress());
+
+            s = new Socket(addr, 80);
+            s.setSoTimeout(SOCKET_TIMEOUT_MS);
+            log("[TARGET] Connected  \u2192  " + s.getRemoteSocketAddress());
+
+            OutputStream os = s.getOutputStream();
+            String req = "GET " + TARGET_PATH + " HTTP/1.1\r\n"
+                    + "Host: " + TARGET_HOST + "\r\n"
+                    + "Connection: close\r\n"
+                    + "\r\n";
+            os.write(req.getBytes());
+            os.flush();
+            log("[TARGET] Request sent");
+
+            InputStream in = s.getInputStream();
+            byte[] buf = new byte[128];
+            int total = 0;
+            StringBuilder head = new StringBuilder();
+            while (total < HTTP_READ_MAX) {
+                int n = in.read(buf);
+                if (n <= 0) {
+                    break;
+                }
+                total += n;
+                for (int i = 0; i < n && head.length() < 200; i++) {
+                    char c = (char)(buf[i] & 0xFF);
+                    if (c == '\r') {
+                        continue;
+                    }
+                    head.append(c);
+                }
+            }
+            String preview = head.toString().replace('\n', ' ');
+            if (preview.length() > 120) {
+                preview = preview.substring(0, 117) + "...";
+            }
+            log("[TARGET] Read " + total + " bytes");
+            log("[TARGET] " + preview);
+            String status = extractStatusLine(head.toString());
+            result("TARGET OK  \u2192  " + (status != null ? status : "response received"));
+            debugPrint("[TARGET] status: " + status);
+        } catch (UnknownHostException e) {
+            this.lastStepStatus = -60;
+            log("[TARGET] DNS FAIL: " + e.getMessage());
+            debugException("[TARGET] DNS failed", e);
+            result("TARGET DNS failed: " + e.getMessage());
+        } catch (IOException e) {
+            this.lastStepStatus = -61;
+            log("[TARGET] ERROR: " + e.getMessage());
+            debugException("[TARGET] IOException", e);
+            result("TARGET failed: " + e.getMessage());
+        } catch (Throwable t) {
+            this.lastStepStatus = -62;
+            log("[TARGET] ERROR: " + t.getClass().getSimpleName());
+            debugException("[TARGET] Exception", t);
+            result("TARGET failed: " + t.getClass().getSimpleName());
+        } finally {
+            if (s != null) {
+                try {
+                    s.close();
+                } catch (IOException ignored) {
+                    // ignore
+                }
+            }
+        }
+    }
+
     private static String extractStatusLine(String raw) {
         int end = raw.indexOf('\n');
         if (end < 0) {
@@ -623,6 +801,14 @@ public class NetworkPage implements Page {
         if (this.resultLabel != null) {
             this.resultLabel.setText(t != null ? t : "");
             this.resultLabel.requestRender();
+        }
+    }
+
+    /** Updates the IP address banner. */
+    private void setIp(String t) {
+        if (this.ipLabel != null) {
+            this.ipLabel.setText(t != null ? t : "");
+            this.ipLabel.requestRender();
         }
     }
 
