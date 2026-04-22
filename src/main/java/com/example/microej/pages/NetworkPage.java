@@ -148,60 +148,60 @@ public class NetworkPage implements Page {
 
         listInterfaces();
 
-        doHttpGetTarget();
+        // doHttpGetTarget();
 
-//        Button localBtn = new Button("Local host  (InetAddress.getLocalHost)");
-//        localBtn.addClassSelector(ACTION_BTN);
-//        localBtn.setOnClickListener(new OnClickListener() {
-//            @Override public void onClick() { readLocalHost(); }
-//        });
-//        main.addChild(localBtn);
-//
-//        section(main, "\u25b6  TCP / DNS  (" + DEMO_HOST + ")");
-//        info(main, "InetAddress.getByName  \u2192  DNS via lwIP");
-//
-//        Button dnsBtn = new Button("DNS lookup  (getByName)");
-//        dnsBtn.addClassSelector(ACTION_BTN);
-//        dnsBtn.setOnClickListener(new OnClickListener() {
-//            @Override public void onClick() { doDnsLookup(); }
-//        });
-//        main.addChild(dnsBtn);
-//
-//        Button tcpBtn = new Button("TCP connect  port 80");
-//        tcpBtn.addClassSelector(ACTION_BTN);
-//        tcpBtn.setOnClickListener(new OnClickListener() {
-//            @Override public void onClick() { doTcpConnect(); }
-//        });
-//        main.addChild(tcpBtn);
-//
-//        Button httpBtn = new Button("HTTP GET  /  (minimal request)");
-//        httpBtn.addClassSelector(ACTION_BTN);
-//        httpBtn.setOnClickListener(new OnClickListener() {
-//            @Override public void onClick() { doHttpGet(); }
-//        });
-//        main.addChild(httpBtn);
-//
-//        section(main, "\u25b6  TLS  (" + DEMO_HOST + ":" + HTTPS_PORT + ")");
-//        info(main, "SSLSocket  \u2192  LLNET_SSL  \u2192  mbedTLS");
-//
-//        Button tlsBtn = new Button("TLS handshake  (HTTPS port)");
-//        tlsBtn.addClassSelector(ACTION_BTN);
-//        tlsBtn.setOnClickListener(new OnClickListener() {
-//            @Override public void onClick() { doTlsHandshake(); }
-//        });
-//        main.addChild(tlsBtn);
-//
-//        section(main, "\u25b6  Wi-Fi (ECOM)");
-//        info(main, "AP scan / join needs ej.api:ecom-wifi + WLAN on the board; not called from this page.");
-//        Button wifiNote = new Button("Wi-Fi scan  (see Foundation doc)");
-//        wifiNote.addClassSelector(ACTION_BTN);
-//        wifiNote.setOnClickListener(new OnClickListener() {
-//            @Override public void onClick() {
-//                log("[WiFi] Use ECOM-WIFI API when STA is configured (ej.api:ecom-wifi).");
-//                result("Wi-Fi: add ecom-wifi calls or native WPL_Scan from BSP when needed.");
-//            }
-//        });
-//        main.addChild(wifiNote);
+       Button localBtn = new Button("Local host  (InetAddress.getLocalHost)");
+       localBtn.addClassSelector(ACTION_BTN);
+       localBtn.setOnClickListener(new OnClickListener() {
+           @Override public void onClick() { readLocalHost(); }
+       });
+       main.addChild(localBtn);
+
+       section(main, "\u25b6  TCP / DNS  (" + DEMO_HOST + ")");
+       info(main, "InetAddress.getByName  \u2192  DNS via lwIP");
+
+       Button dnsBtn = new Button("DNS lookup  (getByName)");
+       dnsBtn.addClassSelector(ACTION_BTN);
+       dnsBtn.setOnClickListener(new OnClickListener() {
+           @Override public void onClick() { doDnsLookup(); }
+       });
+       main.addChild(dnsBtn);
+
+       Button tcpBtn = new Button("TCP connect  port 80");
+       tcpBtn.addClassSelector(ACTION_BTN);
+       tcpBtn.setOnClickListener(new OnClickListener() {
+           @Override public void onClick() { doTcpConnect(); }
+       });
+       main.addChild(tcpBtn);
+
+       Button httpBtn = new Button("HTTP GET  /  (minimal request)");
+       httpBtn.addClassSelector(ACTION_BTN);
+       httpBtn.setOnClickListener(new OnClickListener() {
+           @Override public void onClick() { doHttpGet(); }
+       });
+       main.addChild(httpBtn);
+
+       section(main, "\u25b6  TLS  (" + DEMO_HOST + ":" + HTTPS_PORT + ")");
+       info(main, "SSLSocket  \u2192  LLNET_SSL  \u2192  mbedTLS");
+
+       Button tlsBtn = new Button("TLS handshake  (HTTPS port)");
+       tlsBtn.addClassSelector(ACTION_BTN);
+       tlsBtn.setOnClickListener(new OnClickListener() {
+           @Override public void onClick() { doTlsHandshake(); }
+       });
+       main.addChild(tlsBtn);
+
+       section(main, "\u25b6  Wi-Fi (ECOM)");
+       info(main, "AP scan / join needs ej.api:ecom-wifi + WLAN on the board; not called from this page.");
+       Button wifiNote = new Button("Wi-Fi scan  (see Foundation doc)");
+       wifiNote.addClassSelector(ACTION_BTN);
+       wifiNote.setOnClickListener(new OnClickListener() {
+           @Override public void onClick() {
+               log("[WiFi] Use ECOM-WIFI API when STA is configured (ej.api:ecom-wifi).");
+               result("Wi-Fi: add ecom-wifi calls or native WPL_Scan from BSP when needed.");
+           }
+       });
+       main.addChild(wifiNote);
 
 
         // ── Auto-run: show all info by default (non-blocking sequence) ──
