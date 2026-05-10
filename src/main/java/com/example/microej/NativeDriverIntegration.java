@@ -144,7 +144,7 @@ public final class NativeDriverIntegration {
 	public static final int DHCP_LINK_DOWN        = 5;
 
 	/**
-	 * Returns the IPv4 address of the default lwIP network interface (netif_default->ip_addr.addr)
+	 * Returns the IPv4 address of the default lwIP network interface (netif_default-&gt;ip_addr.addr)
 	 * as a 32-bit value in network byte order. Returns 0 when no address has been assigned yet.
 	 * <p>
 	 * Convert to dotted-decimal in Java:

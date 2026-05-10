@@ -2,6 +2,7 @@ package com.example.microej.pages;
 
 import com.example.microej.AppStyle;
 import com.example.microej.Page;
+import com.example.microej.UiClickLog;
 import ej.bon.Util;
 import ej.microui.display.GraphicsContext;
 import ej.microui.display.Painter;
@@ -59,19 +60,20 @@ public class TouchHardwarePage implements Page {
     public Widget getContentWidget() {
         List main = new List(LayoutOrientation.VERTICAL);
 
-        Label hint = new Label("Touch / drag inside the box below  ->  raw XY coords & event stats update live");
-        hint.addClassSelector(INFO);
-        main.addChild(hint);
-
         Button clearBtn = new Button("Clear Stats");
         clearBtn.addClassSelector(ACTION_BTN);
         clearBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick() {
+                UiClickLog.click("TouchHardwarePage", "Clear Stats", "canvas.clearStats");
                 TouchHardwarePage.this.canvas.clearStats();
             }
         });
         main.addChild(clearBtn);
+
+        Label hint = new Label("Touch / drag inside the box below  ->  raw XY coords & event stats update live");
+        hint.addClassSelector(INFO);
+        main.addChild(hint);
 
         this.canvas = new TouchCanvas();
         this.canvas.addClassSelector(CANVAS);

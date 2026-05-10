@@ -3,6 +3,7 @@ package com.example.microej.pages;
 import com.example.microej.AppStyle;
 import com.example.microej.NativeDriverIntegration;
 import com.example.microej.Page;
+import com.example.microej.UiClickLog;
 import ej.microui.display.Colors;
 import ej.mwt.Widget;
 import ej.mwt.style.EditableStyle;
@@ -21,7 +22,7 @@ import ej.widget.container.LayoutOrientation;
 import ej.widget.container.List;
 
 /**
- * Test scenario to validate Java -> SNI -> BSP/driver integration.
+ * Test scenario to validate Java → SNI → BSP/driver integration.
  * <p>
  * PASS criteria:
  * <ul>
@@ -95,6 +96,7 @@ public class NativeDriverIntegrationTestPage implements Page {
 		runBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick() {
+				UiClickLog.click("NativeDriverIntegrationTestPage", "Run self-test", "selfTest");
 				runSelfTest();
 			}
 		});
@@ -105,6 +107,7 @@ public class NativeDriverIntegrationTestPage implements Page {
 		versionBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick() {
+				UiClickLog.click("NativeDriverIntegrationTestPage", "Get driver version", "getDriverVersion");
 				readVersion();
 			}
 		});
@@ -115,6 +118,7 @@ public class NativeDriverIntegrationTestPage implements Page {
 		blinkBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick() {
+				UiClickLog.click("NativeDriverIntegrationTestPage", "Blink LED (native)", "blinkLed");
 				blinkLed();
 			}
 		});

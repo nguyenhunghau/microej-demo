@@ -3,6 +3,7 @@ package com.example.microej.pages;
 import com.example.microej.AppStyle;
 import com.example.microej.NativeDeviceInfo;
 import com.example.microej.Page;
+import com.example.microej.UiClickLog;
 import ej.mwt.Widget;
 import ej.mwt.style.EditableStyle;
 import ej.mwt.style.background.RectangularBackground;
@@ -72,6 +73,59 @@ public class DeviceInfoPage implements Page {
     public Widget getContentWidget() {
         List main = new List(LayoutOrientation.VERTICAL);
 
+        // ── Buttons ──
+        Button refreshBtn = new Button("Refresh Memory Stats");
+        refreshBtn.addClassSelector(ACTION_BTN);
+        refreshBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick() {
+                UiClickLog.click("DeviceInfoPage", "Refresh Memory Stats", "refreshMemory");
+                Runtime r = Runtime.getRuntime();
+                long free  = r.freeMemory();
+                long total = r.totalMemory();
+                DeviceInfoPage.this.freeLabel.setText(free  + " bytes");
+                DeviceInfoPage.this.totalLabel.setText(total + " bytes");
+                DeviceInfoPage.this.usedLabel.setText((total - free) + " bytes");
+                DeviceInfoPage.this.timeLabel.setText(System.currentTimeMillis() + " ms");
+                DeviceInfoPage.this.freeLabel.requestRender();
+                DeviceInfoPage.this.totalLabel.requestRender();
+                DeviceInfoPage.this.usedLabel.requestRender();
+                DeviceInfoPage.this.timeLabel.requestRender();
+            }
+        });
+        main.addChild(refreshBtn);
+
+        Button gcBtn = new Button("Run GC  (System.gc())");
+        gcBtn.addClassSelector(ACTION_BTN);
+        gcBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick() {
+                UiClickLog.click("DeviceInfoPage", "Run GC", "System.gc");
+                long before = Runtime.getRuntime().freeMemory();
+                System.gc();
+                long after  = Runtime.getRuntime().freeMemory();
+                long freed  = after - before;
+                DeviceInfoPage.this.gcResult
+                        .setText("GC freed: " + freed + " bytes  |  free now: " + after + " bytes");
+                DeviceInfoPage.this.gcResult.requestRender();
+                // Also refresh memory rows
+                Runtime r = Runtime.getRuntime();
+                long total = r.totalMemory();
+                long free  = r.freeMemory();
+                DeviceInfoPage.this.freeLabel.setText(free  + " bytes");
+                DeviceInfoPage.this.totalLabel.setText(total + " bytes");
+                DeviceInfoPage.this.usedLabel.setText((total - free) + " bytes");
+                DeviceInfoPage.this.freeLabel.requestRender();
+                DeviceInfoPage.this.totalLabel.requestRender();
+                DeviceInfoPage.this.usedLabel.requestRender();
+            }
+        });
+        main.addChild(gcBtn);
+
+        this.gcResult = new Label("-- press 'Run GC' to see freed bytes --");
+        this.gcResult.addClassSelector(RESULT);
+        main.addChild(this.gcResult);
+
         // ── Static: Device API ──
         section(main, "> Device API  ->  SNI  ->  BSP");
 
@@ -108,57 +162,6 @@ public class DeviceInfoPage implements Page {
         row(main, "file.encoding:",   prop("file.encoding"));
         row(main, "runtime.version:", prop("com.microej.runtime.version"));
         row(main, "os.name:",         prop("os.name"));
-
-        // ── Buttons ──
-        Button refreshBtn = new Button("Refresh Memory Stats");
-        refreshBtn.addClassSelector(ACTION_BTN);
-        refreshBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick() {
-                Runtime r = Runtime.getRuntime();
-                long free  = r.freeMemory();
-                long total = r.totalMemory();
-                DeviceInfoPage.this.freeLabel.setText(free  + " bytes");
-                DeviceInfoPage.this.totalLabel.setText(total + " bytes");
-                DeviceInfoPage.this.usedLabel.setText((total - free) + " bytes");
-                DeviceInfoPage.this.timeLabel.setText(System.currentTimeMillis() + " ms");
-                DeviceInfoPage.this.freeLabel.requestRender();
-                DeviceInfoPage.this.totalLabel.requestRender();
-                DeviceInfoPage.this.usedLabel.requestRender();
-                DeviceInfoPage.this.timeLabel.requestRender();
-            }
-        });
-        main.addChild(refreshBtn);
-
-        Button gcBtn = new Button("Run GC  (System.gc())");
-        gcBtn.addClassSelector(ACTION_BTN);
-        gcBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick() {
-                long before = Runtime.getRuntime().freeMemory();
-                System.gc();
-                long after  = Runtime.getRuntime().freeMemory();
-                long freed  = after - before;
-                DeviceInfoPage.this.gcResult
-                        .setText("GC freed: " + freed + " bytes  |  free now: " + after + " bytes");
-                DeviceInfoPage.this.gcResult.requestRender();
-                // Also refresh memory rows
-                Runtime r = Runtime.getRuntime();
-                long total = r.totalMemory();
-                long free  = r.freeMemory();
-                DeviceInfoPage.this.freeLabel.setText(free  + " bytes");
-                DeviceInfoPage.this.totalLabel.setText(total + " bytes");
-                DeviceInfoPage.this.usedLabel.setText((total - free) + " bytes");
-                DeviceInfoPage.this.freeLabel.requestRender();
-                DeviceInfoPage.this.totalLabel.requestRender();
-                DeviceInfoPage.this.usedLabel.requestRender();
-            }
-        });
-        main.addChild(gcBtn);
-
-        this.gcResult = new Label("-- press 'Run GC' to see freed bytes --");
-        this.gcResult.addClassSelector(RESULT);
-        main.addChild(this.gcResult);
 
         return main;
     }

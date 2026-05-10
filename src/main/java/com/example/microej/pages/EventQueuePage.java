@@ -2,6 +2,7 @@ package com.example.microej.pages;
 
 import com.example.microej.AppStyle;
 import com.example.microej.Page;
+import com.example.microej.UiClickLog;
 import ej.bon.Timer;
 import ej.bon.TimerTask;
 import ej.microui.display.Colors;
@@ -84,28 +85,40 @@ public class EventQueuePage implements Page {
         Button btn1 = new Button("Publish  USER_INPUT  event");
         btn1.addClassSelector(ACTION_BTN);
         btn1.setOnClickListener(new OnClickListener() {
-            @Override public void onClick() { publishEvent("USER_INPUT", "touch x=360 y=640"); }
+            @Override public void onClick() {
+                UiClickLog.click("EventQueuePage", "Publish USER_INPUT event", "publishEvent(USER_INPUT)");
+                publishEvent("USER_INPUT", "touch x=360 y=640");
+            }
         });
         main.addChild(btn1);
 
         Button btn2 = new Button("Publish  GPIO_IRQ  event  (port=8 pin=1)");
         btn2.addClassSelector(ACTION_BTN);
         btn2.setOnClickListener(new OnClickListener() {
-            @Override public void onClick() { publishEvent("GPIO_IRQ", "port=8 pin=1 val=1"); }
+            @Override public void onClick() {
+                UiClickLog.click("EventQueuePage", "Publish GPIO_IRQ event", "publishEvent(GPIO_IRQ)");
+                publishEvent("GPIO_IRQ", "port=8 pin=1 val=1");
+            }
         });
         main.addChild(btn2);
 
         Button btn3 = new Button("Publish  TIMER_OVF  event  (ch=2)");
         btn3.addClassSelector(ACTION_BTN);
         btn3.setOnClickListener(new OnClickListener() {
-            @Override public void onClick() { publishEvent("TIMER_OVF", "channel=2 period=10ms"); }
+            @Override public void onClick() {
+                UiClickLog.click("EventQueuePage", "Publish TIMER_OVF event", "publishEvent(TIMER_OVF)");
+                publishEvent("TIMER_OVF", "channel=2 period=10ms");
+            }
         });
         main.addChild(btn3);
 
         Button btn4 = new Button("Publish  ADC_DONE  event  (ch=16)");
         btn4.addClassSelector(ACTION_BTN);
         btn4.setOnClickListener(new OnClickListener() {
-            @Override public void onClick() { publishEvent("ADC_DONE", "ch=16 raw=2048 T=35.2C"); }
+            @Override public void onClick() {
+                UiClickLog.click("EventQueuePage", "Publish ADC_DONE event", "publishEvent(ADC_DONE)");
+                publishEvent("ADC_DONE", "ch=16 raw=2048 T=35.2C");
+            }
         });
         main.addChild(btn4);
 
@@ -114,10 +127,12 @@ public class EventQueuePage implements Page {
         burstBtn.setOnClickListener(new OnClickListener() {
             @Override public void onClick() {
                 if (contTimer != null) {
+                    UiClickLog.click("EventQueuePage", "Burst (stop)", "burstStop");
                     contTimer.cancel(); contTimer = null;
                     result("Burst stopped  (" + evtCount + " events total)");
                     return;
                 }
+                UiClickLog.click("EventQueuePage", "Burst (start)", "burstStart");
                 contTimer = new Timer();
                 contTimer.schedule(new TimerTask() {
                     @Override public void run() { publishEvent("BURST_EVT", "seq=" + evtCount); }

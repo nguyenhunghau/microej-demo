@@ -2,6 +2,7 @@ package com.example.microej.pages;
 
 import com.example.microej.AppStyle;
 import com.example.microej.Page;
+import com.example.microej.UiClickLog;
 import ej.microui.display.Colors;
 import ej.mwt.Widget;
 import ej.mwt.style.EditableStyle;
@@ -59,14 +60,20 @@ public class GpioPage implements Page {
         Button setModeBtn = new Button("setMode(PORT, PIN, OUTPUT)");
         setModeBtn.addClassSelector(ACTION_BTN);
         setModeBtn.setOnClickListener(new OnClickListener() {
-            @Override public void onClick() { result("GPIO.setMode(2,3,OUTPUT) -> HAL_GPIO_Init() OK"); }
+            @Override public void onClick() {
+                UiClickLog.click("GpioPage", "setMode(PORT, PIN, OUTPUT)", "GPIO.setMode");
+                result("GPIO.setMode(2,3,OUTPUT) -> HAL_GPIO_Init() OK");
+            }
         });
         main.addChild(setModeBtn);
 
         Button readBtn = new Button("getDigitalValue()");
         readBtn.addClassSelector(ACTION_BTN);
         readBtn.setOnClickListener(new OnClickListener() {
-            @Override public void onClick() { result("GPIO.getDigitalValue(2,3) = " + simDigital + " (sim)"); }
+            @Override public void onClick() {
+                UiClickLog.click("GpioPage", "getDigitalValue()", "GPIO.getDigitalValue");
+                result("GPIO.getDigitalValue(2,3) = " + simDigital + " (sim)");
+            }
         });
         main.addChild(readBtn);
 
@@ -74,6 +81,7 @@ public class GpioPage implements Page {
         writeBtn.addClassSelector(ACTION_BTN);
         writeBtn.setOnClickListener(new OnClickListener() {
             @Override public void onClick() {
+                UiClickLog.click("GpioPage", "toggleDigitalValue()", "GPIO.setDigitalValue");
                 simDigital = !simDigital;
                 result("GPIO.setDigitalValue(2,3," + (simDigital ? 1 : 0) + ") (sim)");
             }
@@ -84,6 +92,7 @@ public class GpioPage implements Page {
         analogBtn.addClassSelector(ACTION_BTN);
         analogBtn.setOnClickListener(new OnClickListener() {
             @Override public void onClick() {
+                UiClickLog.click("GpioPage", "getAnalogValue()", "GPIO.getAnalogValue");
                 simAnalog = (simAnalog + 137) % 4096;
                 result("GPIO.getAnalogValue(1,0) = " + simAnalog + " (0-4095) (sim)");
             }

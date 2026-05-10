@@ -3,10 +3,13 @@ package com.example.microej.pages;
 import com.example.microej.AppStyle;
 import com.example.microej.Page;
 import com.example.microej.RuntimeEnv;
+import com.example.microej.UiClickLog;
 import com.example.microej.bench.*;
 import com.example.microej.bench.suites.*;
 
 import ej.microui.display.Colors;
+import ej.microui.display.GraphicsContext;
+import ej.microui.display.Painter;
 import ej.mwt.Widget;
 import ej.mwt.style.EditableStyle;
 import ej.mwt.style.background.RectangularBackground;
@@ -15,6 +18,7 @@ import ej.mwt.style.outline.UniformOutline;
 import ej.mwt.style.outline.border.RectangularBorder;
 import ej.mwt.stylesheet.cascading.CascadingStylesheet;
 import ej.mwt.stylesheet.selector.ClassSelector;
+import ej.mwt.util.Size;
 import ej.widget.basic.Button;
 import ej.widget.basic.Label;
 import ej.widget.basic.OnClickListener;
@@ -30,6 +34,8 @@ public class BenchmarkPage implements Page {
 
 	private Label summary;
 	private List results;
+	private Label progressLabel;
+	private ProgressBarWidget progressBar;
 
 	@Override
 	public String getName() {
@@ -76,14 +82,12 @@ public class BenchmarkPage implements Page {
 	public Widget getContentWidget() {
 		List main = new List(LayoutOrientation.VERTICAL);
 
-		section(main, "\u25b6  Benchmarks / Self-tests");
-		info(main, "Runs a small suite for each page.");
-
 		Button runBtn = new Button("Run All Benchmarks");
 		runBtn.addClassSelector(ACTION_BTN);
 		runBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick() {
+				UiClickLog.click("BenchmarkPage", "Run All Benchmarks", "runAll");
 				runAll();
 			}
 		});
@@ -92,6 +96,17 @@ public class BenchmarkPage implements Page {
 		this.summary = new Label("Press 'Run All Benchmarks'");
 		this.summary.addClassSelector(RESULT);
 		main.addChild(this.summary);
+
+		// Progress bar (initially hidden)
+		this.progressLabel = new Label("Running tests...");
+		this.progressLabel.addClassSelector(INFO);
+		main.addChild(this.progressLabel);
+
+		this.progressBar = new ProgressBarWidget();
+		main.addChild(this.progressBar);
+
+		section(main, "\u25b6  Benchmarks / Self-tests");
+		info(main, "Runs a small suite for each page.");
 
 		section(main, "\u25b6  Results");
 		this.results = new List(LayoutOrientation.VERTICAL);
@@ -105,10 +120,10 @@ public class BenchmarkPage implements Page {
 
 	private static void log(String msg) {
 		try {
-            if(msg.isEmpty()) {
-                System.out.println();
-                return;
-            }
+			if(msg.isEmpty()) {
+				System.out.println();
+				return;
+			}
 			System.out.println("[Bench] " + msg);
 		} catch (Throwable ignored) {
 			// ignore
@@ -134,16 +149,29 @@ public class BenchmarkPage implements Page {
 //				new com.example.microej.bench.suites.PowerBenchSuite()
 		};
 
+		// Show progress bar
+		this.progressBar.show();
+		this.progressLabel.setText("Running tests...");
+		this.progressLabel.requestRender();
+
 		int pass = 0, fail = 0, skip = 0;
 		long startAll = BenchUtil.nowMs();
 
-		for (int s = 0; s < suites.length; s++) {
-			BenchSuite suite = suites[s];
+		int completedTests = 0;
+		int totalTests = 0;
+		// First pass: count total tests
+		for (BenchSuite suite : suites) {
+			BenchResult[] rs = BenchRunner.runSuite(suite);
+			totalTests += rs.length;
+		}
+
+		// Reset and run again with progress tracking
+		completedTests = 0;
+		for (BenchSuite suite : suites) {
 			log("Suite: " + suite.getName());
 			addLine("[SUITE] " + suite.getName());
 			BenchResult[] rs = BenchRunner.runSuite(suite);
-			for (int i = 0; i < rs.length; i++) {
-				BenchResult r = rs[i];
+			for (BenchResult r : rs) {
 				log("  " + r.status + " " + r.name + " (" + r.durationMs + " ms)" + (r.details != null && r.details.length() > 0 ? (" - " + r.details) : ""));
 				if (r.status == BenchStatus.PASS) pass++;
 				else if (r.status == BenchStatus.FAIL) fail++;
@@ -166,6 +194,13 @@ public class BenchmarkPage implements Page {
 					line += "  -  " + extra;
 				}
 				addLine(line);
+
+				// Update progress
+				completedTests++;
+				this.progressBar.setProgress(completedTests, totalTests);
+				this.progressLabel.setText("Running: " + completedTests + " / " + totalTests + " tests");
+				this.progressLabel.requestRender();
+				this.progressBar.requestRender();
 			}
 			log("");
 		}
@@ -175,6 +210,11 @@ public class BenchmarkPage implements Page {
 		this.summary.setText("Done in " + dur + " ms  |  PASS=" + pass + "  FAIL=" + fail + "  SKIP=" + skip);
 		this.summary.requestRender();
 		this.results.requestRender();
+
+		// Hide progress bar when done
+		this.progressBar.hide();
+		this.progressLabel.setText("Tests complete!");
+		this.progressLabel.requestRender();
 	}
 
 	private static String formatMetrics(BenchMetrics m) {
@@ -208,4 +248,59 @@ public class BenchmarkPage implements Page {
 
 	private void section(List p, String t) { Label l = new Label(t); l.addClassSelector(SECTION); p.addChild(l); }
 	private void info(List p, String t)    { Label l = new Label(t); l.addClassSelector(INFO);    p.addChild(l); }
+
+	static class ProgressBarWidget extends Widget {
+		private int current = 0;
+		private int total = 100;
+		private boolean visible = false;
+
+		void setProgress(int current, int total) {
+			this.current = Math.max(0, Math.min(current, total));
+			this.total = Math.max(1, total);
+		}
+
+		void show() {
+			this.visible = true;
+			this.current = 0;
+			requestRender();
+		}
+
+		void hide() {
+			this.visible = false;
+			requestRender();
+		}
+
+		@Override
+		protected void computeContentOptimalSize(Size size) {
+			size.setSize(640, 40);
+		}
+
+		@Override
+		protected void renderContent(GraphicsContext g, int w, int h) {
+			if (!this.visible) {
+				return;
+			}
+
+			// Background
+			g.setColor(AppStyle.VALUE_BG);
+			Painter.fillRectangle(g, 0, 0, w, h);
+
+			// Border
+			g.setColor(AppStyle.PURPLE);
+			Painter.drawRectangle(g, 0, 0, w - 1, h - 1);
+
+			// Progress fill
+			float progress = this.total > 0 ? (float) this.current / this.total : 0f;
+			int fillWidth = (int) (w * progress);
+			if (fillWidth > 0) {
+				g.setColor(AppStyle.PURPLE);
+				Painter.fillRectangle(g, 0, 0, fillWidth, h);
+			}
+
+			// Text: percentage
+			g.setColor(AppStyle.TEXT_WHITE);
+			int percent = this.total > 0 ? (this.current * 100) / this.total : 0;
+			Painter.drawString(g, percent + "%", getStyle().getFont(), w / 2 - 10, h / 2 - 8);
+		}
+	}
 }

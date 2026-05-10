@@ -2,6 +2,7 @@ package com.example.microej.pages;
 
 import com.example.microej.AppStyle;
 import com.example.microej.Page;
+import com.example.microej.UiClickLog;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -107,6 +108,7 @@ public class FileSystemPage implements Page {
         writeBtn.addClassSelector(ACTION_BTN);
         writeBtn.setOnClickListener(new OnClickListener() {
             @Override public void onClick() {
+                UiClickLog.click("FileSystemPage", "Write File", "doWrite");
                 debugPrint("click: Write");
                 doWrite();
             }
@@ -117,6 +119,7 @@ public class FileSystemPage implements Page {
         readBtn.addClassSelector(ACTION_BTN);
         readBtn.setOnClickListener(new OnClickListener() {
             @Override public void onClick() {
+                UiClickLog.click("FileSystemPage", "Read Last File", "doReadLast");
                 debugPrint("click: Read");
                 doReadLast();
             }
@@ -127,6 +130,7 @@ public class FileSystemPage implements Page {
         listBtn.addClassSelector(ACTION_BTN);
         listBtn.setOnClickListener(new OnClickListener() {
             @Override public void onClick() {
+                UiClickLog.click("FileSystemPage", "List /tmp", "doListTmp");
                 debugPrint("click: List /tmp");
                 doListTmp();
             }
@@ -137,6 +141,7 @@ public class FileSystemPage implements Page {
         spaceBtn.addClassSelector(ACTION_BTN);
         spaceBtn.setOnClickListener(new OnClickListener() {
             @Override public void onClick() {
+                UiClickLog.click("FileSystemPage", "Space on /", "doSpaceRoot");
                 debugPrint("click: Space /");
                 doSpaceRoot();
             }

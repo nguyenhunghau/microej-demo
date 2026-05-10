@@ -2,6 +2,7 @@ package com.example.microej.pages;
 
 import com.example.microej.AppStyle;
 import com.example.microej.Page;
+import com.example.microej.UiClickLog;
 import ej.bon.Timer;
 import ej.bon.TimerTask;
 import ej.microui.display.Colors;
@@ -96,7 +97,10 @@ public class AiPage implements Page {
         Button inferBtn = new Button("Run Inference  (CIFAR-10 single shot)");
         inferBtn.addClassSelector(ACTION_BTN);
         inferBtn.setOnClickListener(new OnClickListener() {
-            @Override public void onClick() { runInfer(); }
+            @Override public void onClick() {
+                UiClickLog.click("AiPage", "Run Inference (single)", "runInfer");
+                runInfer();
+            }
         });
         main.addChild(inferBtn);
 
@@ -104,6 +108,7 @@ public class AiPage implements Page {
         contBtn.addClassSelector(ACTION_BTN);
         contBtn.setOnClickListener(new OnClickListener() {
             @Override public void onClick() {
+                UiClickLog.click("AiPage", "Continuous Inference", "startTimerRunInfer");
                 new Timer().schedule(new TimerTask() {
                     @Override public void run() { runInfer(); }
                 }, 0, 500);

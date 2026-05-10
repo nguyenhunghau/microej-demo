@@ -3,6 +3,7 @@ package com.example.microej.pages;
 import com.example.microej.AppStyle;
 import com.example.microej.NativeDriverIntegration;
 import com.example.microej.Page;
+import com.example.microej.UiClickLog;
 import ej.bon.Util;
 import ej.microui.display.Display;
 import ej.microui.display.GraphicsContext;
@@ -67,6 +68,42 @@ public class DisplayHardwarePage implements Page {
     public Widget getContentWidget() {
         List main = new List(LayoutOrientation.VERTICAL);
 
+        // Controls
+        this.toggleBtn = new Button("Start Benchmark");
+        this.toggleBtn.addClassSelector(ACTION_BTN);
+        main.addChild(this.toggleBtn);
+
+        Button resetBtn = new Button("Reset Stats");
+        resetBtn.addClassSelector(ACTION_BTN);
+        resetBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick() {
+                UiClickLog.click("DisplayHardwarePage", "Reset Stats", "bench.reset");
+                DisplayHardwarePage.this.bench.reset();
+            }
+        });
+        main.addChild(resetBtn);
+
+        // Benchmark widget
+        this.bench = new BenchWidget();
+        main.addChild(this.bench);
+
+        this.toggleBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick() {
+                if (DisplayHardwarePage.this.bench.running) {
+                    UiClickLog.click("DisplayHardwarePage", "Stop Benchmark", "bench.stop");
+                    DisplayHardwarePage.this.bench.stop();
+                    DisplayHardwarePage.this.toggleBtn.setText("Start Benchmark");
+                } else {
+                    UiClickLog.click("DisplayHardwarePage", "Start Benchmark", "bench.start");
+                    DisplayHardwarePage.this.bench.start();
+                    DisplayHardwarePage.this.toggleBtn.setText("Stop Benchmark");
+                }
+                DisplayHardwarePage.this.toggleBtn.requestRender();
+            }
+        });
+
         // Display info (values come from the VEE port / LLUI + panel driver at runtime)
         Label s1 = new Label("> Panel & MicroUI Display  (runtime API)");
         s1.addClassSelector(SECTION);
@@ -128,44 +165,12 @@ public class DisplayHardwarePage implements Page {
         }
         info(main, "Device.getArchitecture(): " + arch);
 
-        // Controls
         Label s2 = new Label("> Framebuffer benchmark  ->  fillRect throughput");
         s2.addClassSelector(SECTION);
         main.addChild(s2);
 
         info(main, "Tap 'Start Benchmark' to measure real-time FPS and draw ops");
 
-        this.toggleBtn = new Button("Start Benchmark");
-        this.toggleBtn.addClassSelector(ACTION_BTN);
-        main.addChild(this.toggleBtn);
-
-        Button resetBtn = new Button("Reset Stats");
-        resetBtn.addClassSelector(ACTION_BTN);
-        resetBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick() {
-                DisplayHardwarePage.this.bench.reset();
-            }
-        });
-        main.addChild(resetBtn);
-
-        // Benchmark widget
-        this.bench = new BenchWidget();
-        main.addChild(this.bench);
-
-        this.toggleBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick() {
-                if (DisplayHardwarePage.this.bench.running) {
-                    DisplayHardwarePage.this.bench.stop();
-                    DisplayHardwarePage.this.toggleBtn.setText("Start Benchmark");
-                } else {
-                    DisplayHardwarePage.this.bench.start();
-                    DisplayHardwarePage.this.toggleBtn.setText("Stop Benchmark");
-                }
-                DisplayHardwarePage.this.toggleBtn.requestRender();
-            }
-        });
 
         return main;
     }
@@ -248,7 +253,7 @@ public class DisplayHardwarePage implements Page {
             long elapsed = Util.platformTimeMillis() - this.startTime;
             int off = (int) (elapsed / 40) % 24;
             int[] colors = { AppStyle.RED, AppStyle.ORANGE, AppStyle.YELLOW, AppStyle.GREEN,
-                             AppStyle.CYAN, AppStyle.BLUE, AppStyle.PURPLE, AppStyle.PINK };
+                    AppStyle.CYAN, AppStyle.BLUE, AppStyle.PURPLE, AppStyle.PINK };
             int bh = h - 50;
             this.drawOps = 0;
             for (int y = 0; y < bh; y += 24) {

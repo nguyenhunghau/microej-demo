@@ -3,6 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/core" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/core/CMSIS" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/nxp-vee-imxrt1170-evk/nxpvee-mimxrt1170-evk/bsp/mcux-sdk/middleware/coreHTTP" vcs="Git" />

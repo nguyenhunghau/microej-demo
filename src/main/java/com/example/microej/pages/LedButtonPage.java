@@ -3,6 +3,7 @@ package com.example.microej.pages;
 import com.example.microej.AppStyle;
 import com.example.microej.NativeDriverIntegration;
 import com.example.microej.Page;
+import com.example.microej.UiClickLog;
 import ej.bon.Timer;
 import ej.bon.TimerTask;
 import ej.microui.display.Colors;
@@ -92,14 +93,20 @@ public class LedButtonPage implements Page {
         Button toggleBtn = new Button("Toggle Real LED On / Off");
         toggleBtn.addClassSelector(ACTION_BTN);
         toggleBtn.setOnClickListener(new OnClickListener() {
-            @Override public void onClick() { toggleLed(); }
+            @Override public void onClick() {
+                UiClickLog.click("LedButtonPage", "Toggle Real LED On / Off", "toggleLed");
+                toggleLed();
+            }
         });
         main.addChild(toggleBtn);
 
         Button blinkBtn = new Button("Blink LED 5x  (Timer 300 ms)");
         blinkBtn.addClassSelector(ACTION_BTN);
         blinkBtn.setOnClickListener(new OnClickListener() {
-            @Override public void onClick() { blinkLed(); }
+            @Override public void onClick() {
+                UiClickLog.click("LedButtonPage", "Blink LED 5x", "blinkLed");
+                blinkLed();
+            }
         });
         main.addChild(blinkBtn);
 
@@ -113,7 +120,10 @@ public class LedButtonPage implements Page {
         Button readBtn = new Button("Poll Button State");
         readBtn.addClassSelector(ACTION_BTN);
         readBtn.setOnClickListener(new OnClickListener() {
-            @Override public void onClick() { readButton(); }
+            @Override public void onClick() {
+                UiClickLog.click("LedButtonPage", "Poll Button State", "readButton");
+                readButton();
+            }
         });
         main.addChild(readBtn);
 

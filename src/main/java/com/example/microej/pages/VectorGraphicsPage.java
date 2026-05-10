@@ -2,6 +2,7 @@ package com.example.microej.pages;
 
 import com.example.microej.AppStyle;
 import com.example.microej.Page;
+import com.example.microej.UiClickLog;
 import ej.bon.Util;
 import ej.microui.display.GraphicsContext;
 import ej.microui.display.Painter;
@@ -58,13 +59,6 @@ public class VectorGraphicsPage implements Page {
     public Widget getContentWidget() {
         List main = new List(LayoutOrientation.VERTICAL);
 
-        Label s1 = new Label("> Drawing API  ->  native GPU / framebuffer");
-        s1.addClassSelector(SECTION);
-        main.addChild(s1);
-
-        info(main, "drawCircleArc()  ->  VGLite GPU / software renderer");
-        info(main, "Animation: MWT Animator tick()  ->  requestRender()  ->  60 FPS");
-
         // Control row
         List row = new List(LayoutOrientation.HORIZONTAL);
 
@@ -78,6 +72,13 @@ public class VectorGraphicsPage implements Page {
 
         main.addChild(row);
 
+        Label s1 = new Label("> Drawing API  ->  native GPU / framebuffer");
+        s1.addClassSelector(SECTION);
+        main.addChild(s1);
+
+        info(main, "drawCircleArc()  ->  VGLite GPU / software renderer");
+        info(main, "Animation: MWT Animator tick()  ->  requestRender()  ->  60 FPS");
+
         this.vgWidget = new VGWidget();
         main.addChild(this.vgWidget);
 
@@ -85,9 +86,11 @@ public class VectorGraphicsPage implements Page {
             @Override
             public void onClick() {
                 if (VectorGraphicsPage.this.vgWidget.paused) {
+                    UiClickLog.click("VectorGraphicsPage", "Resume", "vg.resume");
                     VectorGraphicsPage.this.vgWidget.resume();
                     VectorGraphicsPage.this.pauseBtn.setText("Pause");
                 } else {
+                    UiClickLog.click("VectorGraphicsPage", "Pause", "vg.pause");
                     VectorGraphicsPage.this.vgWidget.pause();
                     VectorGraphicsPage.this.pauseBtn.setText("Resume");
                 }
@@ -98,6 +101,7 @@ public class VectorGraphicsPage implements Page {
         resetBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick() {
+                UiClickLog.click("VectorGraphicsPage", "Reset", "vg.reset");
                 VectorGraphicsPage.this.vgWidget.reset();
                 if (VectorGraphicsPage.this.vgWidget.paused) {
                     VectorGraphicsPage.this.vgWidget.resume();
@@ -165,7 +169,7 @@ public class VectorGraphicsPage implements Page {
 
             int cx = w / 2, cy = h / 2 - 10;
             int[] colors = { AppStyle.INDIGO, AppStyle.PURPLE, AppStyle.CYAN, AppStyle.BLUE,
-                             AppStyle.TEAL, AppStyle.GREEN, AppStyle.YELLOW, AppStyle.ORANGE, AppStyle.RED, AppStyle.PINK };
+                    AppStyle.TEAL, AppStyle.GREEN, AppStyle.YELLOW, AppStyle.ORANGE, AppStyle.RED, AppStyle.PINK };
 
             for (int i = 0; i < colors.length; i++) {
                 int r = 28 + i * 20;

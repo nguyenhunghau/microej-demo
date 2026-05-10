@@ -2,6 +2,7 @@ package com.example.microej.pages;
 
 import com.example.microej.AppStyle;
 import com.example.microej.Page;
+import com.example.microej.UiClickLog;
 import ej.microui.display.Colors;
 import ej.mwt.Widget;
 import ej.mwt.style.EditableStyle;
@@ -76,6 +77,7 @@ public class SecurityPage implements Page {
 		btn.addClassSelector(ACTION_BTN);
 		btn.setOnClickListener(new OnClickListener() {
 			@Override public void onClick() {
+				UiClickLog.click("SecurityPage", "Show details", "showDetails");
 				log("Missing APIs: java.security.MessageDigest, javax.crypto.Cipher, SecureRandom...");
 				result("Crypto APIs missing in this build (stub page)");
 			}

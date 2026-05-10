@@ -40,7 +40,7 @@ public class DemoApp {
             new DeviceInfoPage(),
             new DisplayHardwarePage(),
             new TouchHardwarePage(),
-//            new McuTempPage(),
+           new McuTempPage(),
             new VectorGraphicsPage(),
             new NetworkPage(),
 //            new FileSystemPage(),

@@ -4,6 +4,7 @@ import com.example.microej.AppFonts;
 import com.example.microej.AppStyle;
 import com.example.microej.NativeDriverIntegration;
 import com.example.microej.Page;
+import com.example.microej.UiClickLog;
 import ej.bon.Timer;
 import ej.bon.TimerTask;
 import ej.microui.display.Colors;
@@ -74,29 +75,21 @@ public class McuTempPage implements Page {
     public Widget getContentWidget() {
         List main = new List(LayoutOrientation.VERTICAL);
 
-        section(main, "\u25b6  MCU on-die temperature  (TMPSNS)");
-        info(main, "Reads ANADIG TMPSNS through MCUXpresso driver fsl_tempsensor (OTP trim).");
-        info(main, "Java: NativeDriverIntegration.getMcuTempCentiCelsius()  \u2192  SNI  \u2192  TMPSNS");
-
-        this.tempGauge = new TempGauge();
-        this.tempGauge.addClassSelector(GAUGE);
-        main.addChild(this.tempGauge);
-
-        this.resultLabel = new Label("Tap Read to measure temperature");
-        this.resultLabel.addClassSelector(RESULT);
-        main.addChild(this.resultLabel);
-
         Button readOnce = new Button("Read MCU Temperature  (single)");
         readOnce.addClassSelector(ACTION_BTN);
         readOnce.setOnClickListener(new OnClickListener() {
-            @Override public void onClick() { readTemp(); }
+            @Override public void onClick() {
+                UiClickLog.click("McuTempPage", "Read MCU Temperature (single)", "readTemp");
+                readTemp();
+            }
         });
         main.addChild(readOnce);
 
-        Button readCont = new Button("Continuous Read  \u2192  1 s interval");
+        Button readCont = new Button("Continuous Read  ->  1 s interval");
         readCont.addClassSelector(ACTION_BTN);
         readCont.setOnClickListener(new OnClickListener() {
             @Override public void onClick() {
+                UiClickLog.click("McuTempPage", "Continuous Read", "startTimerReadTemp");
                 result("Continuous read started...");
                 new Timer().schedule(new TimerTask() {
                     @Override public void run() { readTemp(); }
@@ -104,6 +97,18 @@ public class McuTempPage implements Page {
             }
         });
         main.addChild(readCont);
+
+        this.resultLabel = new Label("Tap Read to measure temperature");
+        this.resultLabel.addClassSelector(RESULT);
+        main.addChild(this.resultLabel);
+
+        section(main, "\u25b6  MCU on-die temperature  (TMPSNS)");
+        info(main, "Reads ANADIG TMPSNS through MCUXpresso driver fsl_tempsensor (OTP trim).");
+        info(main, "Java: NativeDriverIntegration.getMcuTempCentiCelsius()  \u2192  SNI  \u2192  TMPSNS");
+
+        this.tempGauge = new TempGauge();
+        this.tempGauge.addClassSelector(GAUGE);
+        main.addChild(this.tempGauge);
 
         section(main, "\u25b6  Call stack");
         info(main, "TMPSNS_Init / StartMeasure / GetCurrentTemperature  (see native_driver_integration.c)");
@@ -120,8 +125,8 @@ public class McuTempPage implements Page {
             }
             float tempC = centi / 100f;
             String label = (tempC < 30) ? " [COOL]" :
-                           (tempC < 50) ? " [NORMAL]" :
-                           (tempC < 70) ? " [WARM]" : " [HOT!]";
+                    (tempC < 50) ? " [NORMAL]" :
+                            (tempC < 70) ? " [WARM]" : " [HOT!]";
             result("Temp: " + formatCelsius(tempC) + " \u00b0C" + label + "  (hardware)");
             this.tempGauge.setTemp(tempC);
             this.tempGauge.requestRender();
@@ -182,8 +187,8 @@ public class McuTempPage implements Page {
             float ratio = Math.max(0f, Math.min(1f, this.temp / 100f));
             int bw = (int)(w * ratio);
             int color = this.temp < 30 ? AppStyle.BLUE
-                      : this.temp < 50 ? AppStyle.GREEN
-                      : this.temp < 70 ? AppStyle.ORANGE : AppStyle.RED;
+                    : this.temp < 50 ? AppStyle.GREEN
+                    : this.temp < 70 ? AppStyle.ORANGE : AppStyle.RED;
             if (bw > 0) {
                 g.setColor(color);
                 Painter.fillRectangle(g, 0, 24, bw, 32);
