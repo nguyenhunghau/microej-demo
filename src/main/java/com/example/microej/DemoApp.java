@@ -36,6 +36,12 @@ public class DemoApp {
     private static final int PAGE_TITLE   = 121;
     private static final int PAGE_TOP     = 122;
 
+  /**
+   * Set to a page index (0..PAGES.length-1) to auto-open a page after showing the menu.
+   * Keep -1 to stay on the menu.
+   */
+  private static final int AUTO_START_PAGE = -1;
+
     private static final Page[] PAGES = {
             new DeviceInfoPage(),
             new DisplayHardwarePage(),
@@ -43,10 +49,6 @@ public class DemoApp {
            new McuTempPage(),
             new VectorGraphicsPage(),
             new NetworkPage(),
-//            new FileSystemPage(),
-//            new SecurityPage(),
-//            new AiPage(),
-//            new EventQueuePage(),
             new AnimatedMascotPage(),
             new BenchmarkPage(),
     };
@@ -79,7 +81,9 @@ public class DemoApp {
 			// ignore
 		}
 
-//        showPage(6);
+    if (AUTO_START_PAGE >= 0 && AUTO_START_PAGE < PAGES.length) {
+      showPage(AUTO_START_PAGE);
+    }
     }
 
     private static Widget makeCard(final int idx) {
@@ -114,10 +118,13 @@ public class DemoApp {
         Label title = new Label(page.getName());
         title.addClassSelector(PAGE_TITLE);
 
-        List topBar = new List(LayoutOrientation.HORIZONTAL);
+        // Top bar layout: keep back button visible, keep stats visible on small panels.
+        // SimpleDock(HORIZONTAL) lets the center shrink (title) instead of clipping the right side.
+        SimpleDock topBar = new SimpleDock(LayoutOrientation.HORIZONTAL);
         topBar.addClassSelector(PAGE_TOP);
-        topBar.addChild(backBtn);
-        topBar.addChild(title);
+        topBar.setFirstChild(backBtn);
+        topBar.setCenterChild(title);
+        topBar.setLastChild(new SystemStatsWidget());
 
         Widget content = page.getContentWidget();
 

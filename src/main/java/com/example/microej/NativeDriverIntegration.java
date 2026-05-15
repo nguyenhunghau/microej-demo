@@ -136,6 +136,45 @@ public final class NativeDriverIntegration {
 	 */
 	public static native long getNativeHeapFreeBytes();
 
+	/**
+	 * Optional: initializes a native CPU load measurement facility when available.
+	 * <p>
+	 * On the RT1170 VEE Port, CPU load is typically measured using an RTOS idle hook.
+	 *
+	 * @return 0 on success, or a negative value if unsupported/failed.
+	 */
+	public static native int initCpuLoad();
+
+	/**
+	 * Optional: returns an instantaneous/averaged CPU load percentage.
+	 *
+	 * @return 0..100 when supported, or a negative value when unsupported.
+	 */
+	public static native int getCpuLoadPercent();
+
+	/**
+	 * Optional: returns the instantaneous CPU load in permille (0..1000).
+	 * <p>
+	 * This is more precise than {@link #getCpuLoadPercent()} and avoids rounding to an integer percent.
+	 *
+	 * @return 0..1000 when supported, or a negative value when unsupported.
+	 */
+	public static native int getCpuLoadPermille();
+
+	/**
+	 * Optional debug: raw idle counter captured during the last CPU load sampling interval.
+	 *
+	 * @return non-negative counter value when supported, or a negative value when unsupported.
+	 */
+	public static native int getCpuIdleCounter();
+
+	/**
+	 * Optional debug: reference counter used to normalize the idle counter.
+	 *
+	 * @return non-negative counter value when supported, or a negative value when unsupported.
+	 */
+	public static native int getCpuReferenceCounter();
+
 	/** DHCP state constants — must match lwip_util.c */
 	public static final int DHCP_START            = 1;
 	public static final int DHCP_WAIT_ADDRESS     = 2;
